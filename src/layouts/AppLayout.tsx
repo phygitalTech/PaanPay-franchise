@@ -1,12 +1,26 @@
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import {useAuthContext} from '@/context/AuthContext';
-import {Navigate, Outlet} from '@tanstack/react-router';
-import {useState} from 'react';
+import {Navigate, Outlet, useNavigate} from '@tanstack/react-router';
+import {useEffect, useState} from 'react';
 
 const AppLayout = () => {
-  const {isAuthenticated} = useAuthContext();
+  const {isAuthenticated, user} = useAuthContext();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+
+  console.log('user', user);
+  console.log('auth', isAuthenticated);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate({to: '/signin'});
+      return;
+    }
+    if (user?.role === 'ADMIN') {
+      navigate({to: '/'});
+    }
+  }, [isAuthenticated, user, navigate]);
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">

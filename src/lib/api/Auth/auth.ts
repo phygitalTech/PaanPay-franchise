@@ -13,9 +13,9 @@ type verifyVerificationCodeType = z.infer<typeof verifyVerificationCodeSchema>;
 
 // user registration endpoint
 
-const registerUser = async (data: User) => {
+const registerAdmin = async (data: User) => {
   try {
-    const res = await unAuthenticatedApi.post('/users/register', data, {
+    const res = await unAuthenticatedApi.post('/users/admin/signup', data, {
       params: {
         redirect: 'http://localhost:5173/verify-email',
       },
@@ -178,7 +178,7 @@ const getCurrentUser = async () => {
 };
 
 export {
-  registerUser,
+  registerAdmin,
   verifyCode,
   loginUser,
   UpdateUser,

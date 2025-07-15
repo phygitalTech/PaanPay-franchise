@@ -10,15 +10,19 @@ import {
   resetPassword,
   requestResetPassword,
   getCurrentUser,
+  registerAdmin,
 } from '@/lib/api/Auth/auth';
 import {AUTH_KEYS, QUERY_KEYS} from '../queryKeys'; // assuming you have query keys defined
 import toast from 'react-hot-toast';
+import {AxiosError} from 'axios';
+import {jwtDecode} from 'jwt-decode';
+import {unAuthenticatedApi} from '@/utils/axios';
 
 // Hook to register a new user
 const useRegisterUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: registerUser,
+    mutationFn: registerAdmin,
     onSuccess: () => {
       toast.success('User registered successfully');
       queryClient.invalidateQueries({queryKey: [AUTH_KEYS.GET_CURRENT_USER]});
@@ -43,15 +47,53 @@ const useVerifyCode = () => {
 };
 
 // Hook to log in a user
-const useLoginUser = () => {
+// export const LogIn = async (data: {phone: string; password: string}) => {
+//   try {
+//     const response = await unAuthenticatedApi.post('/users/login', data);
+
+//     const decodedToken = jwtDecode(response?.data?.data?.accessToken);
+//     localStorage.setItem('token', JSON.stringify(response?.data?.data));
+//     localStorage.setItem('user', JSON.stringify(decodedToken));
+
+//     return response.data.data; // Ensure this matches { accessToken: string }
+//   } catch (error) {
+//     if (error instanceof AxiosError) {
+//       throw new Error(error.response?.data?.message || 'Login failed');
+//     }
+//     throw new Error('An unexpected error occurred');
+//   }
+// };
+
+export const LogIn = async (data: {phone: string; password: string}) => {
+  try {
+    const res = await unAuthenticatedApi.post('/users/login', data);
+
+    // Drill down to the real token object
+    const token = res.data?.data?.data?.token;
+    if (!token?.accessToken) throw new Error('No access token returned');
+
+    const decoded = jwtDecode(token.accessToken);
+
+    localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem('user', JSON.stringify(decoded));
+
+    return res.data.data; // { accessToken, refreshToken }
+  } catch (err) {
+    if (err instanceof AxiosError) {
+      throw new Error(err.response?.data?.message || 'Login failed');
+    }
+    throw err; // already a useful Error object
+  }
+};
+
+export const useLogin = () => {
   return useMutation({
-    mutationFn: loginUser,
-    onSuccess: (res) => {
-      localStorage.setItem(QUERY_KEYS.TOKEN, JSON.stringify(res.data));
-      toast.success('Logged in successfully');
+    mutationFn: (data: {phone: string; password: string}) => LogIn(data),
+    onSuccess: () => {
+      toast.success('Login successful');
     },
     onError: (error) => {
-      toast.error('Failed to login: ' + error.message);
+      toast.error('Login failed');
     },
   });
 };
@@ -147,7 +189,6 @@ const useGetCurrentUser = () => {
 export {
   useRegisterUser,
   useVerifyCode,
-  useLoginUser,
   useUpdateUser,
   useLogoutUser,
   useRequestRefreshAccessToken,

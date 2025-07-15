@@ -19,6 +19,7 @@ const AuthContextProvider = ({children}: {children: ReactNode}) => {
     if (localToken) {
       const decodedToken: User = jwtDecode(localToken.accessToken);
 
+      console.log('authh', decodedToken);
       if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
         localStorage.removeItem(QUERY_KEYS.TOKEN);
         setToken(null);
@@ -35,6 +36,8 @@ const AuthContextProvider = ({children}: {children: ReactNode}) => {
       }
     }
   }, []);
+
+  console.log('auth is', isAuthenticated);
 
   // Value of the context
   const contextValue = {
