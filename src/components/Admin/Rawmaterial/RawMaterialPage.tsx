@@ -2,15 +2,16 @@ import React, {useEffect, useState} from 'react';
 import z from 'zod';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm, FormProvider} from 'react-hook-form';
-import GenericInputField from '../Forms/Input/GenericInputField';
-import GenericButton from '../Forms/Buttons/GenericButton';
-import GenericSearchDropdown from '../Forms/SearchDropDown/GenericSearchDropdown';
+import GenericInputField from '../../Forms/Input/GenericInputField';
+import GenericButton from '../../Forms/Buttons/GenericButton';
+import GenericSearchDropdown from '../../Forms/SearchDropDown/GenericSearchDropdown';
 import {rawMaterialValidationSchema} from '@/lib/validation/dishSchemas';
+
+import {toast} from 'react-hot-toast';
 import {
   useAddRawMaterialAdmin,
-  useGetRawMaterialCategoriesAdmin,
-} from '@/lib/react-query/queriesAndMutations/admin/dish';
-import {toast} from 'react-hot-toast';
+  useGetCategorydata,
+} from '@/lib/react-query/Admin/rawmaterial';
 
 type Category = {
   id: string;
@@ -39,23 +40,19 @@ const AddRawMaterial: React.FC = () => {
     isSuccess,
     isError: addrawerror,
   } = useAddRawMaterialAdmin();
+
   const {
     data: categoriesData,
     isLoading,
     isError,
     error,
-  } = useGetRawMaterialCategoriesAdmin();
+  } = useGetCategorydata('');
 
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    if (
-      categoriesData &&
-      categoriesData.status &&
-      categoriesData.data &&
-      Array.isArray(categoriesData.data)
-    ) {
-      const options: Category[] = categoriesData.data.map(
+    if (categoriesData && Array.isArray(categoriesData)) {
+      const options: Category[] = categoriesData.map(
         (category: FetchedCategory) => ({
           id: category.id,
           name: category.name,
@@ -72,21 +69,19 @@ const AddRawMaterial: React.FC = () => {
       (category) => category.id === data.rawMaterialCategory,
     );
 
-    if (!selectedCategory || !selectedCategory.languageId) {
-      toast.error('Invalid language ID for the selected category');
+    if (!selectedCategory) {
+      toast.error('Please select a valid raw material category');
       return;
     }
 
-    try {
-      await addRawMaterialAdmin({
+    addRawMaterialAdmin(
+      JSON.stringify({
         name: data.name,
         unit: data.unit,
-        categoryId: data.rawMaterialCategory,
-        languageId: selectedCategory.languageId,
-      });
-    } catch (error) {
-      console.error('Error saving raw material');
-    }
+        price: Number(data.price),
+        rawMaterialCategoryId: selectedCategory.id,
+      }),
+    );
   };
 
   if (isLoading) return <div>Loading categories...</div>;
@@ -135,6 +130,13 @@ const AddRawMaterial: React.FC = () => {
                 {label: 'pcs', value: 'PIECE'},
                 {label: 'meter', value: 'METER'},
               ]}
+            />
+          </div>
+          <div className="col-span-12 md:col-span-6">
+            <GenericInputField
+              name="price"
+              label="Price"
+              placeholder="Enter price"
             />
           </div>
         </div>

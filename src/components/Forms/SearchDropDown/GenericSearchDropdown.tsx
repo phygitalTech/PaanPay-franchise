@@ -51,20 +51,19 @@ const GenericSearchDropdown: React.FC<GenericSearchDropdownProps> = ({
   );
 
   // Sync `searchTerm` with the selected form value
-useEffect(() => {
-  if (!isOpen) {
-    const currentValue = getValues(name);
-    const selectedOption = options?.find(
-      (option) => option.value === currentValue,
-    );
-    if (selectedOption) {
-      setSearchTerm(selectedOption.label);
-    } else {
-      setSearchTerm('');
+  useEffect(() => {
+    if (!isOpen) {
+      const currentValue = getValues(name);
+      const selectedOption = options?.find(
+        (option) => option.value === currentValue,
+      );
+      if (selectedOption) {
+        setSearchTerm(selectedOption.label);
+      } else {
+        setSearchTerm('');
+      }
     }
-  }
-}, [name, options, getValues, isOpen]);
-
+  }, [name, options, getValues, isOpen]);
 
   // Clear the label and value on input click
   const handleInputClick = (onChange: (value: string) => void) => {
@@ -75,56 +74,54 @@ useEffect(() => {
   };
 
   // Handle keyboard navigation
-const handleKeyDown = (
-  e: React.KeyboardEvent,
-  onChange: (value: string) => void,
-) => {
-  if (!isOpen) {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-      setIsOpen(true);
+  const handleKeyDown = (
+    e: React.KeyboardEvent,
+    onChange: (value: string) => void,
+  ) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        setIsOpen(true);
+      }
+      return;
     }
-    return;
-  }
 
-  switch (e.key) {
-    case 'ArrowDown':
-      e.preventDefault();
-      setHighlightedIndex((prev) => {
-        const next = prev < filteredOptions.length - 1 ? prev + 1 : 0;
-        scrollToOption(next);
-        return next;
-      });
-      break;
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHighlightedIndex((prev) => {
+          const next = prev < filteredOptions.length - 1 ? prev + 1 : 0;
+          scrollToOption(next);
+          return next;
+        });
+        break;
 
-    case 'ArrowUp':
-      e.preventDefault();
-      setHighlightedIndex((prev) => {
-        const next = prev > 0 ? prev - 1 : filteredOptions.length - 1;
-        scrollToOption(next);
-        return next;
-      });
-      break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHighlightedIndex((prev) => {
+          const next = prev > 0 ? prev - 1 : filteredOptions.length - 1;
+          scrollToOption(next);
+          return next;
+        });
+        break;
 
-    case 'Enter':
-      e.preventDefault();
-      if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
-        const selected = filteredOptions[highlightedIndex];
-        onChange(selected.value);
-        setSearchTerm(selected.label);
+      case 'Enter':
+        e.preventDefault();
+        if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
+          const selected = filteredOptions[highlightedIndex];
+          onChange(selected.value);
+          setSearchTerm(selected.label);
+          setIsOpen(false);
+          setHighlightedIndex(-1);
+        }
+        break;
+
+      case 'Escape':
+        e.preventDefault();
         setIsOpen(false);
         setHighlightedIndex(-1);
-      }
-      break;
-
-    case 'Escape':
-      e.preventDefault();
-      setIsOpen(false);
-      setHighlightedIndex(-1);
-      break;
-  }
-};
-
-
+        break;
+    }
+  };
 
   // Scroll to the highlighted option
   const scrollToOption = (index: number) => {
@@ -156,11 +153,10 @@ const handleKeyDown = (
 
   // Reset highlighted index when options change
   useEffect(() => {
-  if (!isOpen) {
-    setHighlightedIndex(-1);
-  }
-}, [isOpen]);
-
+    if (!isOpen) {
+      setHighlightedIndex(-1);
+    }
+  }, [isOpen]);
 
   return (
     <Controller

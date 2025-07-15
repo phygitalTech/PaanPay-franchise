@@ -20,6 +20,43 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       path: '/',
       icon: <PiSquaresFourLight size={22} />,
     },
+    {
+      label: 'Merchant List',
+      path: '/merchantlist',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
+      label: 'Raw Material',
+      icon: <PiSquaresFourLight size={22} />,
+      subRoutes: [
+        {
+          label: 'Add Raw Material Category',
+          path: '/rawmaterial/rawmaterialcategor',
+          icon: <PiSquaresFourLight size={22} />,
+        },
+        {
+          label: 'Raw Material',
+          path: '/rawmaterial/addrawmaterial',
+          icon: <PiSquaresFourLight size={22} />,
+        },
+      ],
+    },
+    {
+      label: 'Product',
+      icon: <PiSquaresFourLight size={22} />,
+      subRoutes: [
+        {
+          label: 'Add Product',
+          path: '/product/addproduct',
+          icon: <PiSquaresFourLight size={22} />,
+        },
+        {
+          label: 'Product',
+          path: '/product/productpage',
+          icon: <PiSquaresFourLight size={22} />,
+        },
+      ],
+    },
   ];
 
   const trigger = useRef<HTMLButtonElement>(null);
