@@ -21,10 +21,21 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       icon: <PiSquaresFourLight size={22} />,
     },
     {
+      label: 'Customer List ',
+      path: '/customerlist',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
+      label: 'Reports',
+      path: '/reports',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
       label: 'Merchant List',
       path: '/merchantlist',
       icon: <PiSquaresFourLight size={22} />,
     },
+
     {
       label: 'Raw Material',
       icon: <PiSquaresFourLight size={22} />,

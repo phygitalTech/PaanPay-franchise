@@ -11,10 +11,6 @@ const DropdownNotification = () => {
   const {user} = useAuthContext();
   const id = user?.caterorId ?? '';
   const navigate = useNavigate();
-  const {data: notificationReponse} = useGetAmountNotificationById(id);
-  console.log('====================================');
-  console.log(notificationReponse);
-  console.log('====================================');
 
   const formatIndianDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -77,12 +73,10 @@ const DropdownNotification = () => {
                 <h5 className="text-sm font-semibold text-bodydark2">
                   Notifications
                 </h5>
-                <span className="text-gray-500 text-xs">
-                  {notificationReponse?.length || 0} new
-                </span>
+                <span className="text-gray-500 text-xs"></span>
               </div>
             </div>
-
+            {/* 
             <div className="max-h-96 overflow-y-auto">
               {notificationReponse?.length ? (
                 notificationReponse.map((item: any, index: number) => (
@@ -155,7 +149,7 @@ const DropdownNotification = () => {
                   </p>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         )}
       </li>
