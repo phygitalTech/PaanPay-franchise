@@ -11,6 +11,7 @@ const rawMaterialCategoryValidationSchema = z.object({
 const rawMaterialValidationSchema = z.object({
   name: z.string().min(1, 'Raw material name is required').max(100),
   unit: z.enum(['BOTTLE', 'GRAM', 'KILOGRAM', 'LITRE', 'PIECE', 'METER']),
+  price: z.number().positive({message: 'Price must be a positive number'}),
   rawMaterialCategory: z.string().min(1, 'Raw material category is required'),
   amount: z.number().positive({message: 'Amount must be a positive number'}),
 });

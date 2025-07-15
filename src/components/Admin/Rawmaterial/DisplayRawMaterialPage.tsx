@@ -1,17 +1,9 @@
 import GenericTable, {Column} from '@/components/Forms/Table/GenericTable';
-import {
-  useDeleteRawMaterialAdmin,
-  useGetRawMaterialAdmin,
-} from '@/lib/react-query/queriesAndMutations/admin/dish';
-import {useGetLanguages} from '@/lib/react-query/queriesAndMutations/admin/languages';
+import {useGetCategorydata} from '@/lib/react-query/Admin/rawmaterial';
+import {useDeleteRawMaterialAdmin} from '@/lib/react-query/Admin/rawmaterial';
 import {useNavigate} from '@tanstack/react-router';
 import {useEffect, useState} from 'react';
 // import toast from 'react-hot-toast'; // Import toast
-
-type Language = {
-  id: string;
-  name: string;
-};
 
 type RawMaterial = {
   id: string;
@@ -28,10 +20,7 @@ const columns: Column<RawMaterial>[] = [
 const DisplayRawMaterial: React.FC = () => {
   const navigate = useNavigate();
   const [rawMaterialData, setRawMaterialData] = useState<RawMaterial[]>([]);
-  const [languageId, setLanguageId] = useState<string | undefined>(undefined);
 
-  const {data: languagesData, isLoading: isLoadingLanguages} =
-    useGetLanguages();
   const {mutate: deleteRawMaterialAdmin} = useDeleteRawMaterialAdmin();
 
   const {
@@ -40,14 +29,7 @@ const DisplayRawMaterial: React.FC = () => {
     error,
     isLoading,
     refetch,
-  } = useGetRawMaterialAdmin(languageId || '');
-
-  useEffect(() => {
-    if (languageId) {
-      // Refetch data when languageId changes
-      refetch();
-    }
-  }, [languageId, refetch]);
+  } = useGetCategorydata('');
 
   useEffect(() => {
     if (rawMaterialApiData?.data && Array.isArray(rawMaterialApiData.data)) {
@@ -65,20 +47,13 @@ const DisplayRawMaterial: React.FC = () => {
     }
   }, [rawMaterialApiData, error, isSuccess]);
 
-  const handleLanguageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const selectedLanguageId = event.target.value;
-    setLanguageId(selectedLanguageId);
-  };
-
   const handleEdit = (item: RawMaterial) => {
     navigate({
-      to: `/update/rawMaterial/${item.id}`,
+      to: `/update/rawMaterial/${item.id || '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5'}`,
     });
   };
 
-  if (isLoading || isLoadingLanguages) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   const handleDelete = (item: RawMaterial) => {
     deleteRawMaterialAdmin(item.id, {
@@ -96,32 +71,9 @@ const DisplayRawMaterial: React.FC = () => {
   };
 
   return (
-    <>
-      <label
-        htmlFor="language-select"
-        className="mb-2.5 block text-black dark:text-white"
-      >
-        Select Language
-      </label>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
-        <div className="col-span-12 mb-8 md:col-span-6">
-          <select
-            id="language-select"
-            value={languageId}
-            onChange={handleLanguageChange}
-            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-4 py-3 outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-          >
-            <option value="" disabled>
-              Select a language
-            </option>
-            {languagesData.map((language: Language) => (
-              <option key={language.id} value={language.id}>
-                {language.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+    <div>
+      <h2 className="mb-4 text-lg font-semibold">Raw Material List</h2>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6"></div>
       <GenericTable
         data={rawMaterialData || []}
         columns={columns}
@@ -130,7 +82,7 @@ const DisplayRawMaterial: React.FC = () => {
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
-    </>
+    </div>
   );
 };
 
