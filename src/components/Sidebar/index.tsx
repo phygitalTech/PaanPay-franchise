@@ -36,12 +36,6 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       icon: <PiSquaresFourLight size={22} />,
     },
 
-    //  {
-    //   label: 'Add Products',
-    //   path: '/products',
-    //   icon: <PiSquaresFourLight size={22} />,
-    // },
-
     {
       label: 'Raw Material',
       icon: <PiSquaresFourLight size={22} />,
@@ -78,6 +72,11 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
           icon: <PiSquaresFourLight size={22} />,
         },
       ],
+    },
+    {
+      label: 'Setting',
+      path: '/setting/setting',
+      icon: <PiSquaresFourLight size={22} />,
     },
   ];
 

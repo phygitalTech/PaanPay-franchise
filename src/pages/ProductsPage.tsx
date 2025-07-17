@@ -229,7 +229,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <tr key={row.id}>
           <td className="px-3 py-2">
             <select
-              className="rounded p-4"
+              className="rounded p-4 dark:border-form-strokedark dark:bg-boxdark"
               value={row.material}
               onChange={(e) =>
                 setRows((prev) =>
@@ -261,7 +261,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             <td key={s.id} className="px-3 py-2">
               <input
                 type="number"
-                className="rounded border border-stroke px-2 py-3 text-center"
+                className="rounded border border-stroke px-2 py-3 text-center dark:border-form-strokedark dark:bg-boxdark"
                 value={row.qty[s.id] ?? ''}
                 onChange={(e) =>
                   changeQty(row.id, s.id, e.target.value, setRows)
@@ -286,7 +286,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   );
 
   const TableHead: React.FC = () => (
-    <thead className="bg-slate-200">
+    <thead className="bg-slate-200 dark:border-form-strokedark dark:bg-slate-600">
       <tr>
         <th className="px-3 py-2 text-center font-bold">Raw Material</th>
         {sizes.map((s) => (
@@ -303,14 +303,14 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
           <th key={s.id} className="px-3 pb-4">
             <div className="flex flex-col items-center gap-2">
               <input
-                className="rounded border border-stroke py-3 text-center"
+                className="rounded border border-stroke py-3 text-center dark:border-form-strokedark dark:bg-boxdark"
                 placeholder="name"
                 value={s.name}
                 onChange={(e) => updateSize(s.id, 'name', e.target.value)}
               />
               <input
                 type="number"
-                className="rounded border border-stroke py-3 text-center"
+                className="rounded border border-stroke py-3 text-center dark:border-form-strokedark dark:bg-boxdark"
                 placeholder="price"
                 value={s.price}
                 onChange={(e) => updateSize(s.id, 'price', e.target.value)}
@@ -354,9 +354,13 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   return (
     <div className="space-y-8 p-2">
       {mode === 'edit' && id ? (
-        <h1 className="text-2xl font-bold text-neutral-700">Edit Product</h1>
+        <h1 className="text-2xl font-bold text-neutral-700 dark:text-white">
+          Edit Product
+        </h1>
       ) : (
-        <h1 className="text-2xl font-bold text-black">Create Product</h1>
+        <h1 className="text-2xl font-bold text-black dark:text-white">
+          Create Product
+        </h1>
       )}
 
       {/* Top Header Inputs */}
@@ -364,7 +368,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium">Product Name</label>
           <input
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             placeholder="Enter product name"
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
@@ -373,7 +377,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium">Description</label>
           <input
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             placeholder="Enter description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -383,7 +387,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium"> Category</label>
           <select
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -400,7 +404,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium">Self</label>
           <input
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             placeholder="Enter self"
             value={self}
             onChange={(e) => setSelf(e.target.value)}
@@ -410,7 +414,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium">Level 1</label>
           <input
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             placeholder="Enter level1"
             value={level1}
             onChange={(e) => setLevel1(e.target.value)}
@@ -420,7 +424,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-4">
           <label className="text-sm font-medium">Level 2</label>
           <input
-            className="mt-1 w-full rounded border border-stroke px-3 py-2"
+            className="mt-1 w-full rounded border border-stroke px-3 py-2 dark:border-form-strokedark dark:bg-boxdark"
             placeholder="Enter level2"
             value={level2}
             onChange={(e) => setLevel2(e.target.value)}
@@ -431,12 +435,17 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
           <label className="text-gray-700 mb-1 block text-sm font-medium">
             Product Image *
           </label>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="dark:border-form-strokedark dark:bg-boxdark"
+          />
           {imagePreview && (
             <img
               src={imagePreview}
               alt="Preview"
-              className="mt-2 max-h-52 w-full rounded-lg object-cover"
+              className="mt-2 max-h-52 w-full rounded-lg object-cover dark:border-form-strokedark dark:bg-boxdark"
             />
           )}
         </div>
@@ -462,7 +471,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       </div>
 
       {/* Raw Material Table */}
-      <section className="bg-gray-50 rounded-lg border border-stroke p-6">
+      <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
         <h3 className="mb-4 text-lg font-semibold">Raw Materials</h3>
         <div className="max-h-96 overflow-auto">
           <table className="min-w-max text-sm">
@@ -489,7 +498,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       </section>
 
       {/* Extra Items Table */}
-      <section className="bg-gray-50 rounded-lg border border-stroke p-6">
+      <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
         <h3 className="mb-4 text-lg font-semibold">Extra Items</h3>
         <div className="max-h-72 overflow-auto">
           <table className="min-w-max text-sm">

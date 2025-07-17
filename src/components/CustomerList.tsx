@@ -1,51 +1,44 @@
+/*eslint-disable*/
+
+import {useAuthContext} from '@/context/AuthContext';
+import {useGetCustomers} from '@/lib/react-query/Admin/customer';
 import React from 'react';
 import {FiEdit, FiTrash} from 'react-icons/fi';
 
 const CustomerList = () => {
+  const {user} = useAuthContext();
+  const admin_id = user?.id;
+  const {data: allCustomers} = useGetCustomers(admin_id!);
+  console.log('customers', allCustomers);
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Customer List</h1>
+      <header className="rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+        <h1 className="text-xl font-semibold leading-tight">Customer List</h1>
+        <p className="text-sm opacity-90">Manage your customers</p>
+      </header>
       <section className="rounded-md bg-white shadow">
         <div className="max-h-[70vh] overflow-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 sticky top-0 z-10 bg-neutral-100 text-xs uppercase tracking-wider">
-              <tr className="[&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left">
+              <tr className="dark:bg-meta-4 [&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:dark:border-strokedark [&_th]:dark:text-white">
                 {/* <th>#</th> */}
                 <th>Name</th>
-                <th>Price (₹)</th>
-                <th>Cancle</th>
-                <th>Edit</th>
+                <th>Address </th>
+                <th>Phone</th>
+                <th>Email</th>
               </tr>
             </thead>
 
-            <tbody className="[&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2">
-              <tr
-                // key=1
-                className="hover:bg-gray-50 even:bg-gray-50/50 odd:bg-white"
-              >
-                {/* <td>{index + 1}</td> */}
-                <td className="whitespace-nowrap">tutuy</td>
+            <tbody className="dark:bg-meta-4 [&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2 [&_td]:dark:border-strokedark [&_td]:dark:text-white">
+              {allCustomers?.map((each: any) => (
+                <tr className="hover:bg-gray-50 even:bg-gray-50/50 outline-none transition odd:bg-white focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input">
+                  <td className="whitespace-nowrap">{each?.Fullname}</td>
 
-                <td>67</td>
-                <td className="">
-                  {' '}
-                  <button
-                  // onClick={(e) => {
-                  //   e.stopPropagation();
-                  //   handleDelete(item.id);
-                  // }}
-                  >
-                    <FiTrash size={20} className="ml-4 text-red-500" />
-                  </button>
-                </td>
-                <td>
-                  <button
-                  //  onClick={() => onEditPress(item)}
-                  >
-                    <FiEdit size={20} className="ml-4 text-blue-500" />
-                  </button>
-                </td>
-              </tr>
+                  <td>{each?.address || '-'}</td>
+                  <td>{each?.phone}</td>
+                  <td>{each?.email}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
