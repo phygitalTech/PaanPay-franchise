@@ -86,11 +86,12 @@ const ProductList = () => {
         <p className="text-sm opacity-90">Manage your products</p>
       </header>
 
+      {/* border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark */}
       <section className="rounded-md bg-white shadow">
         <div className="max-h-[70vh] overflow-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 sticky top-0 z-10 bg-neutral-100 text-xs uppercase tracking-wider">
-              <tr className="[&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left">
+              <tr className="dark:bg-meta-4 [&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:dark:border-strokedark [&_th]:dark:text-white">
                 <th>#</th>
                 <th>Name</th>
                 <th>Category</th>
@@ -100,12 +101,11 @@ const ProductList = () => {
                 <th>Edit</th>
               </tr>
             </thead>
-
-            <tbody className="[&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2">
+            <tbody className="dark:bg-meta-4 [&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2 [&_td]:dark:border-strokedark [&_td]:dark:text-white">
               {allProducts?.data?.map((each: any, index) => (
                 <tr
                   key={each.id}
-                  className="hover:bg-gray-50 even:bg-gray-50/50 odd:bg-white"
+                  className="hover:bg-gray-50 even:bg-gray-50/50 outline-none transition odd:bg-white focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input"
                 >
                   <td>{index + 1}</td>
                   <td>{each?.name}</td>
