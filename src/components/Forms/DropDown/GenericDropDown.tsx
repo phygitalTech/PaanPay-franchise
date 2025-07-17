@@ -34,7 +34,7 @@ const GenericDropdown: React.FC<GenericDropdownProps> = ({
       render={({field: {onChange, onBlur, value, name}}) => (
         <div className="w-full">
           {label && (
-            <label className="mb-2 block text-black dark:text-white">
+            <label className="mb-2 block text-sm text-black dark:text-white">
               {label}
             </label>
           )}

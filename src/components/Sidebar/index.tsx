@@ -36,6 +36,12 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       icon: <PiSquaresFourLight size={22} />,
     },
 
+    //  {
+    //   label: 'Add Products',
+    //   path: '/products',
+    //   icon: <PiSquaresFourLight size={22} />,
+    // },
+
     {
       label: 'Raw Material',
       icon: <PiSquaresFourLight size={22} />,
@@ -58,12 +64,12 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       subRoutes: [
         {
           label: 'Add Product',
-          path: '/product/addproduct',
+          path: '/product/saveproduct',
           icon: <PiSquaresFourLight size={22} />,
         },
         {
           label: 'Product',
-          path: '/product/productpage',
+          path: '/productlist',
           icon: <PiSquaresFourLight size={22} />,
         },
       ],
