@@ -1,14 +1,18 @@
-import DisplayAddRawMaterial from '@/components/Admin/Rawmaterial/DisplayRawMaterialPage';
-import AddRawMaterial from '@/components/Admin/Rawmaterial/RawMaterialPage';
+import AddRawMaterial from '@/components/Admin/RawmaterialCat/AddRawmaterail';
+import DisplayAddRawMaterial from '@/components/Admin/RawmaterialCat/DisplayAddRawMaterail';
+import React from 'react';
 
 const AddRawMaterialPage: React.FC = () => {
   return (
-    <div className="mx-auto max-w-270">
-      <div className="grid grid-cols-8 gap-8">
-        <div className="col-span-8">
+    <div className="mx-auto max-w-7xl px-4 py-6">
+      <div className="grid grid-cols-1 gap-6">
+        {/* Form */}
+        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
           <AddRawMaterial />
         </div>
-        <div className="col-span-8">
+
+        {/* Table */}
+        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
           <DisplayAddRawMaterial />
         </div>
       </div>
