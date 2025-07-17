@@ -42,12 +42,17 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       subRoutes: [
         {
           label: 'Add Raw Material Category',
-          path: '/rawmaterial/rawmaterialcategor',
+          path: '/rawmaterial/addrawmaterial',
           icon: <PiSquaresFourLight size={22} />,
         },
         {
           label: 'Raw Material',
-          path: '/rawmaterial/addrawmaterial',
+          path: '/rawmaterial/rawmaterial',
+          icon: <PiSquaresFourLight size={22} />,
+        },
+        {
+          label: 'Extra Item',
+          path: '/rawmaterial/extraitemraw',
           icon: <PiSquaresFourLight size={22} />,
         },
       ],

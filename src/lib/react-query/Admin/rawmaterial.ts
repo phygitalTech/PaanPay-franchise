@@ -1,90 +1,150 @@
+{
+  /* eslint-disable  */
+}
+import {z} from 'zod';
 import {
-  addRawMaterialCategory,
-  addRawMaterialAdmin,
-  getRawMaterialCategoriesAdmin,
-  getCategorydata,
+  addRawMaterialCategoryAPI,
+  getRawMaterialCategoryByIdAPI,
+  deleteRawMaterialCategoryAPI,
+  addRawMaterial,
+  fetchCategories,
+  getAllrawmaterial,
+  deleteRawMaterialAdmin,
+  addExtraItem,
+  deleteExtraItem,
+  fetchExtraItemsData,
+  fetchExtraItems,
+  fetchExtraItemById,
 } from '@/lib/api/Admin/rawmaterial';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import {api} from '@/utils/axios';
+import {} from './../../api/Admin/rawmaterial';
 
-export const useAddRawMaterialCategoryName = () => {
+const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
+
+export const useAddRawMaterialCategory = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (data: {name: string; id: string}) => {
-      const {id, ...rest} = data;
-      return addRawMaterialCategory(id, rest);
-    },
+    mutationFn: addRawMaterialCategoryAPI,
     onSuccess: () => {
-      toast.success('Raw Material Category added successfully!');
-    },
-    onError: () => {
-      toast.error('Failed to add Raw Material Category');
-    },
-    onSettled: () => {
+      toast.success('Category added!');
       queryClient.invalidateQueries({
-        queryKey: ['RAW MATERIAL CATEGORIES'],
+        queryKey: ['RAW_MATERIAL_CATEGORIES'],
       });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Add failed');
     },
   });
 };
 
-export const useDeleteRawMaterialCategoryAdmin = () => {
-  const queryClient = useQueryClient();
+export const useGetRawMaterialCategory = () => {
+  return useQuery({
+    queryKey: ['RAW_MATERIAL_CATEGORIES'],
+    queryFn: getRawMaterialCategoryByIdAPI,
+  });
+};
 
+export const useDeleteRawMaterialCategory = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) =>
-      axios.delete(
-        `/admin/raw-material-category/${id || '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5'}`,
-      ),
+    mutationFn: (id: string) => deleteRawMaterialCategoryAPI(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['raw-material-categories']});
+      toast.success('Category deleted!');
+      queryClient.invalidateQueries({
+        queryKey: ['RAW_MATERIAL_CATEGORIES'],
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Delete failed');
     },
   });
 };
 
 export const useAddRawMaterialAdmin = () => {
+  // console.log('useAddRawMaterialAdmin');
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (id: string) => getRawMaterialCategoriesAdmin(id),
+    mutationFn: addRawMaterial,
     onSuccess: () => {
-      toast.success('Raw Material added successfully!');
+      toast.success('Raw material saved successfully!');
+      queryClient.invalidateQueries({
+        queryKey: ['rawMaterialList'],
+      });
     },
-    onError: () => {
-      toast.error('Failed to add Raw Material');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: ['RAW MATERIAL CATEGORIES']});
+    onError: (error) => {
+      toast.error('Failed to save raw material');
+      console.error(error);
     },
   });
 };
 
-export const useGetCategorydata = (id: string) => {
+export const useGetCategoryData = () => {
   return useQuery({
-    queryKey: ['category-data'],
-    queryFn: () => getCategorydata(id),
+    queryKey: ['rawMaterialCategories'],
+    queryFn: fetchCategories,
   });
 };
 
-export const useGetRawMaterialCategoriesAdmin = (id: string) => {
+export const useGetAllRawMaterials = () => {
   return useQuery({
-    queryKey: ['raw-material-categories'],
-    queryFn: () => getRawMaterialCategoriesAdmin(id),
+    queryKey: ['rawMaterialList'],
+    queryFn: getAllrawmaterial,
   });
 };
 
 export const useDeleteRawMaterialAdmin = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (id: string) =>
-      axios.delete(
-        `/admin/raw-material/${id || '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5'}`,
-      ),
+    mutationFn: (id: string) => deleteRawMaterialAdmin(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['raw-materials']});
+      toast.success('Raw material deleted successfully!');
+      queryClient.invalidateQueries({
+        queryKey: ['rawMaterialList'],
+      });
+    },
+  });
+};
+
+export const useAddExtraItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: {name: string; price: number}) => addExtraItem(data),
+    onSuccess: () => {
+      toast.success('Extra item added successfully!');
+      queryClient.invalidateQueries({
+        queryKey: ['extra-item '],
+      });
+    },
+    onError: (error) => {
+      toast.error(`Failed to add extra item: ${error.message}`);
+    },
+  });
+};
+
+export const useGetExtraItemsDataByid = (id: string) => {
+  return useQuery({
+    queryKey: ['extra-item', id],
+    queryFn: () => fetchExtraItemById(id),
+  });
+};
+export const useGetExtraItemsData = () => {
+  return useQuery({
+    queryKey: ['extra-item'],
+    queryFn: fetchExtraItemsData,
+  });
+};
+
+export const useDeleteExtraItem = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteExtraItem(id),
+    onSuccess: () => {
+      toast.success('Extra item deleted successfully!');
+      queryClient.invalidateQueries({
+        queryKey: ['extra-itemssss'],
+      });
     },
   });
 };

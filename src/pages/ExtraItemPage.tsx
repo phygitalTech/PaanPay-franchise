@@ -1,22 +1,23 @@
-import SelectRawMaterial from '@/components/Admin/Rawmaterial/SelectRawmaterial';
-import DisplayRawmaterialdata from '@/components/Admin/Rawmaterial/DisplayRawmaterialdata';
+import DisplayExtraItemTable from '@/components/Admin/RawmaterialCat/ExtraItem/DisplayExtraItem';
+import ExtraItem from '@/components/Admin/RawmaterialCat/ExtraItem/ExtraItem';
 import React from 'react';
-const Rawmaterial: React.FC = () => {
+
+const ExtraItemPage: React.FC = () => {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
       <div className="grid grid-cols-1 gap-6">
         {/* Form */}
         <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
-          <SelectRawMaterial />
+          <ExtraItem />
         </div>
 
         {/* Table */}
         <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
-          <DisplayRawmaterialdata />
+          <DisplayExtraItemTable />
         </div>
       </div>
     </div>
   );
 };
 
-export default Rawmaterial;
+export default ExtraItemPage;
