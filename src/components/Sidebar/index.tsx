@@ -74,6 +74,11 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       ],
     },
     {
+      label: 'Purchase Request',
+      path: '/request/purchaserequest',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
       label: 'Setting',
       path: '/setting/setting',
       icon: <PiSquaresFourLight size={22} />,

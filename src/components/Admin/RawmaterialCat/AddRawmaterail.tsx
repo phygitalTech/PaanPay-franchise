@@ -37,7 +37,9 @@ const AddRawMaterial: React.FC = () => {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="space-y-8 bg-white p-8 dark:bg-black"
       >
-        <h1 className="text-lg font-bold">Add Raw Material Category</h1>
+        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <h1 className="text-xl font-bold">Add Raw Material Category</h1>
+        </div>
         <GenericInputField
           name="name"
           label="Raw Material Category"

@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React from 'react';
-import GenericTable, {Column} from '../../Forms/Table/GenericTable';
 import {toast} from 'react-hot-toast';
 
 import {
@@ -8,6 +7,7 @@ import {
   useGetAllRawMaterials,
 } from '@/lib/react-query/Admin/rawmaterial';
 import {useNavigate} from '@tanstack/react-router';
+import GenericTables from '@/components/Forms/Table/GenericTables';
 
 type RawMaterial = {
   id: string;
@@ -60,8 +60,10 @@ const DisplayRawMaterialTable: React.FC = () => {
 
   return (
     <div className="mt-10">
-      <h2 className="mb-4 text-lg font-semibold">Raw Material List</h2>
-      <GenericTable
+      <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+        <h1 className="text-xl font-bold">Raw Material List</h1>
+      </div>
+      <GenericTables
         data={tableData}
         columns={columns}
         itemsPerPage={5}
