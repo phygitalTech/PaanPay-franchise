@@ -67,54 +67,54 @@ const SelectRawMaterial: React.FC = () => {
         onSubmit={methods.handleSubmit(onSubmit)}
         className="space-y-8 bg-white p-8 dark:bg-black"
       >
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
-          <h1 className="col-span-12 mb-4 text-lg font-semibold">
-            Raw Material
-          </h1>
+        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <h1 className="text-xl font-bold">Raw Material</h1>
+        </div>
 
-          <div className="col-span-12 md:col-span-6">
-            <GenericInputField
-              name="name"
-              label="Raw Material Name"
-              placeholder="Enter raw material name"
-            />
-          </div>
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="name"
+            label="Raw Material Name"
+            placeholder="Enter raw material name"
+          />
+        </div>
 
-          <div className="col-span-12 md:col-span-6">
-            <GenericSearchDropdown
-              name="rawMaterialCategory"
-              label="Raw Material Category"
-              options={
-                categoriesData?.map((category: any) => ({
-                  label: category.name,
-                  value: category.id,
-                })) || []
-              }
-            />
-          </div>
+        <div className="col-span-12 md:col-span-6">
+          <GenericSearchDropdown
+            name="rawMaterialCategory"
+            label="Raw Material Category"
+            options={
+              categoriesData?.map((category: any) => ({
+                label: category.name,
+                value: category.id,
+              })) || []
+            }
+          />
+        </div>
 
-          <div className="col-span-12 md:col-span-6">
-            <GenericSearchDropdown
-              name="unit"
-              label="Unit"
-              options={[
-                {label: 'kg', value: 'KILOGRAM'},
-                {label: 'bottle', value: 'BOTTLE'},
-                {label: 'gm', value: 'GRAM'},
-                {label: 'ltr', value: 'LITRE'},
-                {label: 'pcs', value: 'PIECE'},
-                {label: 'meter', value: 'METER'},
-              ]}
-            />
-          </div>
+        <div className="col-span-12 md:col-span-6">
+          <GenericSearchDropdown
+            name="unit"
+            label="Unit"
+            options={[
+              {label: 'kg', value: 'KG'},
+              {label: 'bottle', value: 'BOTTLE'},
+              {label: 'gm', value: 'GRAM'},
+              {label: 'ltr', value: 'LITRE'},
+              {label: 'mili ltr', value: 'ML'},
+              {label: 'pcs', value: 'PIECE'},
+              {label: 'dozen', value: 'DOZEN'},
+              {label: 'none', value: 'NONE'},
+            ]}
+          />
+        </div>
 
-          <div className="col-span-12 md:col-span-6">
-            <GenericInputField
-              name="price"
-              label="Price"
-              placeholder="Enter price"
-            />
-          </div>
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="price"
+            label="Price"
+            placeholder="Enter price"
+          />
         </div>
 
         <div className="flex justify-end">

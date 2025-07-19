@@ -10,6 +10,9 @@ interface InputProps {
   defaultValue?: string | number;
   validation?: RegisterOptions;
   disabled?: boolean;
+  classname?: string;
+  value?: string | number; // Added value prop for controlled input
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added onChange prop
 }
 
 const GenericInputField: React.FC<InputProps> = ({
@@ -20,6 +23,9 @@ const GenericInputField: React.FC<InputProps> = ({
   defaultValue,
   validation,
   disabled = false,
+  classname = '',
+  value,
+  onChange,
 }) => {
   const {
     register,

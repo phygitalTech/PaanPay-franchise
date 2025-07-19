@@ -358,9 +358,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
           Edit Product
         </h1>
       ) : (
-        <h1 className="text-2xl font-bold text-black dark:text-white">
-          Create Product
-        </h1>
+        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <h1 className="text-xl font-bold">Create Product</h1>
+        </div>
       )}
 
       {/* Top Header Inputs */}
@@ -453,7 +453,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         <div className="col-span-6 flex justify-end gap-2">
           <button
             onClick={addColumn}
-            className="flex w-full items-center justify-center rounded-lg bg-indigo-600 p-1 text-white hover:bg-indigo-700"
+            className="flex w-full items-center justify-center rounded-lg bg-blue-600 p-1 text-white hover:bg-blue-700"
           >
             + Add
             <br />
@@ -461,7 +461,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
           </button>
           <button
             onClick={deleteColumn}
-            className="flex w-full items-center justify-center rounded-lg bg-indigo-600 p-1 text-white hover:bg-indigo-700"
+            className="flex w-full items-center justify-center rounded-lg bg-blue-600 p-1 text-white hover:bg-blue-700"
           >
             delete
             <br />
@@ -484,13 +484,13 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             onClick={() =>
               setRawRows([...rawRows, {id: uid(), material: '', qty: {}}])
             }
-            className="rounded bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700"
+            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
           >
             + Add Row
           </button>
           <button
             onClick={() => setRawRows((prev) => prev.slice(0, -1))}
-            className="rounded bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700"
+            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
           >
             Delete Row
           </button>
@@ -511,13 +511,13 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             onClick={() =>
               setExtraRows([...extraRows, {id: uid(), material: '', qty: {}}])
             }
-            className="rounded bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700"
+            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
           >
             + Add Row
           </button>
           <button
             onClick={() => setExtraRows((prev) => prev.slice(0, -1))}
-            className="rounded bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700"
+            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700"
           >
             Delete Row
           </button>
@@ -527,7 +527,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       {/* Submit Button */}
       <div className="flex justify-end">
         <button
-          className="rounded bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700"
+          className="rounded bg-blue-600 px-8 py-3 font-medium text-white hover:bg-blue-700"
           onClick={() => handleSubmit()}
         >
           Submit

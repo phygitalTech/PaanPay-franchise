@@ -6,6 +6,7 @@ import {
 } from '@/lib/react-query/Admin/rawmaterial';
 import {useNavigate} from '@tanstack/react-router';
 import toast from 'react-hot-toast';
+import GenericTables from '@/components/Forms/Table/GenericTables';
 
 interface ExtraItem {
   id: string;
@@ -54,8 +55,10 @@ const DisplayExtraItem: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h2 className="mb-4 text-lg font-semibold">Extra Items List</h2>
-      <GenericTable
+      <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+        <h1 className="text-xl font-bold">Extra Items List</h1>
+      </div>
+      <GenericTables
         data={extraItemsData || []}
         columns={columns}
         itemsPerPage={5}

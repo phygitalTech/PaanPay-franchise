@@ -15,6 +15,10 @@ interface GenericSearchDropdownProps {
   options: Option[];
   defaultOption?: string;
   disabled?: boolean;
+  onChange?: (selectedOption: string) => void;
+  className?: string;
+  dropdownClass?: string;
+  menuClass?: string;
 }
 
 const GenericSearchDropdown: React.FC<GenericSearchDropdownProps> = ({
@@ -23,6 +27,10 @@ const GenericSearchDropdown: React.FC<GenericSearchDropdownProps> = ({
   options,
   defaultOption = '',
   disabled = false,
+  className = '',
+  onChange,
+  dropdownClass = '',
+  menuClass = '',
 }) => {
   const {control, getValues} = useFormContext();
   const [searchTerm, setSearchTerm] = useState<string>(defaultOption);

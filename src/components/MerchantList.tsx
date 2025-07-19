@@ -1,16 +1,25 @@
-/*eslint-disable*/
+{
+  /* eslint-disable */
+}
 
+import React from 'react';
 import {useAuthContext} from '@/context/AuthContext';
 import {useGetMerchant} from '@/lib/react-query/Admin/customer';
-import React from 'react';
+import {useNavigate} from '@tanstack/react-router';
 import {FiEdit, FiTrash} from 'react-icons/fi';
 
 const MerchantList = () => {
+  const navigate = useNavigate();
   const {user} = useAuthContext();
   const admin_id = user?.id;
+
   const {data: allMerchant} = useGetMerchant(admin_id!);
 
-  console.log('merchant', allMerchant);
+  const handleNavigate = (id: string) => {
+    navigate({
+      to: `/merchantdetail/${id}`,
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -18,29 +27,41 @@ const MerchantList = () => {
         <h1 className="text-xl font-semibold leading-tight">Merchant List</h1>
         <p className="text-sm opacity-90">Manage your Merchants</p>
       </header>
-      <section className="rounded-md bg-white shadow">
-        <div className="max-h-[70vh] overflow-auto">
+
+      <section className="rounded-md bg-white shadow dark:bg-boxdark">
+        <div className="overflow-x-auto rounded-md border border-stroke dark:border-strokedark">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 sticky top-0 z-10 bg-neutral-100 text-xs uppercase tracking-wider">
-              <tr className="dark:bg-meta-4 [&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:dark:border-strokedark [&_th]:dark:text-white">
-                {/* <th>#</th> */}
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
+              <tr className="dark:bg-meta-4">
+                <th className="border border-stroke px-4 py-3 text-center dark:border-strokedark">
+                  Merchant Name
+                </th>
+                <th className="border border-stroke px-4 py-3 text-center dark:border-strokedark">
+                  Phone
+                </th>
+                <th className="border border-stroke px-4 py-3 text-center dark:border-strokedark">
+                  Email
+                </th>
               </tr>
             </thead>
-
-            <tbody className="[&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2">
-              {allMerchant?.map((each: any) => (
+            <tbody className="text-gray-800 dark:text-gray-100">
+              {allMerchant?.map((each: any, index: number) => (
                 <tr
-                  // key=1
-                  className="hover:bg-gray-50 even:bg-gray-50/50 odd:bg-white"
+                  key={index}
+                  className="even:bg-gray-50 hover:bg-gray-100 transition dark:even:bg-boxdark-2 dark:hover:bg-graydark"
                 >
-                  {/* <td>{index + 1}</td> */}
-                  <td className="whitespace-nowrap">{each?.user?.Fullname}</td>
-
-                  <td>{each?.user?.phone}</td>
-                  <td>{each?.user?.email}</td>
+                  <td
+                    className="cursor-pointer whitespace-nowrap border border-stroke px-4 py-3 text-center text-blue-500 hover:underline dark:border-strokedark"
+                    onClick={() => handleNavigate(each?.id)}
+                  >
+                    {each?.user?.Fullname}
+                  </td>
+                  <td className="border border-stroke px-4 py-3 text-center dark:border-strokedark">
+                    {each?.user?.phone}
+                  </td>
+                  <td className="border border-stroke px-4 py-3 text-center dark:border-strokedark">
+                    {each?.user?.email}
+                  </td>
                 </tr>
               ))}
             </tbody>

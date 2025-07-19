@@ -20,6 +20,7 @@ export type Column<T> = {
   action?: boolean;
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
+  cell?: (props: {rowIndex: number}) => React.ReactNode;
 };
 
 type GenericTableProps<T> = {
@@ -32,6 +33,7 @@ type GenericTableProps<T> = {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   paginationOff?: boolean;
+  className?: string;
 };
 
 const GenericTable = <T,>({
@@ -44,6 +46,7 @@ const GenericTable = <T,>({
   onEdit: handleEdit,
   onDelete: handleDelete,
   paginationOff = false,
+  className,
 }: GenericTableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
