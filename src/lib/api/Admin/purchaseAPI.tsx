@@ -3,16 +3,14 @@ import {AxiosError} from 'axios';
 
 const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 export const getAllPurchaseRequests = async (id: string) => {
-  const response = await api.get(`/admin/purchase/requests/${id || STATIC_ID}`);
+  const response = await api.get(`/admin/purchase/requests/${id}`);
   // console.log('Purchase requests fetched:', response.data);
   return response.data;
 };
 
 export const deletePurchaseRequest = async (id: string) => {
   try {
-    const response = await api.delete(
-      `/admin/purchase/requests/${id || STATIC_ID}`,
-    );
+    const response = await api.delete(`/admin/purchase/requests/${id}`);
     // console.log('Purchase request deleted:', response.data);
     return response.data;
   } catch (error) {

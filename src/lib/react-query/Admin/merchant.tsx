@@ -21,7 +21,7 @@ interface InventoryItem {
 
 interface MerchantInventoryPayload {
   merchantId: string;
-  items: InventoryItem[]; // 👈 changed from `inventoryData` to `items`
+  items: InventoryItem[];
 }
 
 export const useSubmitMerchantInventory = () => {
@@ -43,11 +43,11 @@ export const useSubmitMerchantInventory = () => {
   });
 };
 
-export const useGetReportData = () => {
+export const useGetReportData = (id: string) => {
   return useQuery({
     queryKey: ['reportData'],
     queryFn: async () => {
-      const response = await api.get(`/admin/reports/${STATIC_ID}`);
+      const response = await api.get(`/admin/reports/${id}`);
       console.log('first', response.data);
       return response.data;
     },

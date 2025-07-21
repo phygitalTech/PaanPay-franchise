@@ -6,6 +6,7 @@ export type Column<T> = {
   accessor: keyof T | string;
   cell?: (row: T, index: number) => React.ReactNode;
   className?: string;
+  sortable?: boolean;
 };
 
 type Props<T> = {
@@ -13,6 +14,9 @@ type Props<T> = {
   columns: Column<T>[];
   itemsPerPage?: number;
   searchAble?: boolean;
+  action?: boolean;
+  onDelete?: (item: T) => void;
+  onEdit?: (item: T) => void;
 };
 
 export default function GenericTables<T>({
@@ -20,6 +24,9 @@ export default function GenericTables<T>({
   columns,
   itemsPerPage = 5,
   searchAble = false,
+  action = false,
+  onEdit,
+  onDelete,
 }: Props<T>) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,10 +90,7 @@ export default function GenericTables<T>({
           <tbody>
             {paginatedData.length > 0 ? (
               paginatedData.map((row, rowIndex) => (
-                <tr
-                  key={rowIndex}
-                  className="border-b border-stroke bg-white dark:border-strokedark dark:bg-white"
-                >
+                <tr className="hover:bg-gray-50 even:bg-gray-50/50 outline-none transition odd:bg-white focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input">
                   {columns.map((col, colIndex) => (
                     <td
                       key={colIndex}

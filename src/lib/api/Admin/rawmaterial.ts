@@ -2,11 +2,14 @@ import {api} from '@/utils/axios';
 import {AxiosError} from 'axios';
 
 const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
-
-export const addRawMaterialCategoryAPI = async (data: {name: string}) => {
+export type Payload = {
+  name: string;
+};
+export const addRawMaterialCategoryAPI = async (id: string, data: Payload) => {
   try {
-    const res = await api.post(`/admin/rawMaterialCategory/${STATIC_ID}`, data);
-    // console.log('response data', res);
+    console.log('id', id);
+    const res = await api.post(`/admin/rawMaterialCategory/${id}`, data);
+
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -18,9 +21,9 @@ export const addRawMaterialCategoryAPI = async (data: {name: string}) => {
   }
 };
 
-export const getRawMaterialCategoryByIdAPI = async () => {
+export const getRawMaterialCategoryByIdAPI = async (id: string) => {
   try {
-    const res = await api.get(`/admin/rawMaterialCategory/${STATIC_ID}`);
+    const res = await api.get(`/admin/rawMaterialCategory/${id}`);
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -34,7 +37,7 @@ export const getRawMaterialCategoryByIdAPI = async () => {
 
 export const deleteRawMaterialCategoryAPI = async (id: string) => {
   try {
-    const res = await api.put(`/admin/rawMaterialCategory/${id || STATIC_ID}`);
+    const res = await api.delete(`/admin/rawMaterialCategory/${id}`);
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -46,14 +49,17 @@ export const deleteRawMaterialCategoryAPI = async (id: string) => {
   }
 };
 
-export const addRawMaterial = async (data: {
-  name: string;
-  price: number;
-  unit: string;
-  rawMaterialCategoryId: string;
-}) => {
+export const addRawMaterial = async (
+  id: string,
+  data: {
+    name: string;
+    price: number;
+    unit: string;
+    rawMaterialCategoryId: string;
+  },
+) => {
   try {
-    const response = await api.post(`/admin/rawMaterial/${STATIC_ID}`, data);
+    const response = await api.post(`/admin/rawMaterial/${id}`, data);
     //console.log('Raw material added:', response.data);
     return response.data;
   } catch (error) {
@@ -62,15 +68,15 @@ export const addRawMaterial = async (data: {
   }
 };
 
-export const fetchCategories = async () => {
-  const response = await api.get(`/admin/rawMaterialCategory/${STATIC_ID}`);
+export const fetchCategories = async (id: string) => {
+  const response = await api.get(`/admin/rawMaterialCategory/${id}`);
   // console.log('response dataaaa', response.data);
   return response.data;
 };
 
-export const getAllrawmaterial = async () => {
+export const getAllrawmaterial = async (id: string) => {
   try {
-    const res = await api.get(`/admin/rawMaterial/${STATIC_ID}`);
+    const res = await api.get(`/admin/rawMaterial/${id}`);
     //console.log('response dataaaa', res.data);
     return res.data;
   } catch (error) {
@@ -98,11 +104,14 @@ export const deleteRawMaterialAdmin = async (id: string) => {
   }
 };
 
-export const addExtraItem = async (data: {name: string; price: number}) => {
+export const addExtraItem = async (
+  id: string,
+  data: {name: string; price: number},
+) => {
   try {
     console.log('eeeeeeeeeeeeeeeeeeadded:', data);
 
-    const response = await api.post(`/admin/extraItem/${STATIC_ID}`, data);
+    const response = await api.post(`/admin/extraItem/${id}`, data);
     //console.log('eeeeeeeeeeeeeeeeeeadded:', response.data);
     return response.data;
   } catch (error) {
@@ -113,7 +122,7 @@ export const addExtraItem = async (data: {name: string; price: number}) => {
 
 export const fetchExtraItemById = async (id: string) => {
   try {
-    const response = await api.get(`/admin/extraItem/${id || STATIC_ID}`);
+    const response = await api.get(`/admin/extraItem/${id}`);
     //console.log('Fetched extra itemmmmmmmmmmm:', response.data);
     return response.data;
   } catch (error) {
@@ -125,9 +134,9 @@ export const fetchExtraItemById = async (id: string) => {
     throw error;
   }
 };
-export const fetchExtraItems = async () => {
+export const fetchExtraItems = async (id: string) => {
   try {
-    const response = await api.get(`/admin/extraItem/${STATIC_ID}`);
+    const response = await api.get(`/admin/extraItem/${id}`);
     //console.log('Fetched extra items:', response.data);
     return response.data;
   } catch (error) {
@@ -140,9 +149,9 @@ export const fetchExtraItems = async () => {
   }
 };
 
-export const fetchExtraItemsData = async () => {
+export const fetchExtraItemsData = async (id: string) => {
   try {
-    const response = await api.get(`/admin/extraItem/${STATIC_ID}`);
+    const response = await api.get(`/admin/extraItem/${id}`);
     //console.log('Fetched extra itemsssssss:', response.data);
     return response.data;
   } catch (error) {
@@ -156,7 +165,7 @@ export const fetchExtraItemsData = async () => {
 };
 export const deleteExtraItem = async (id: string) => {
   try {
-    const response = await api.delete(`/admin/extraItem/${id || STATIC_ID}`);
+    const response = await api.delete(`/admin/extraItem/${id}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

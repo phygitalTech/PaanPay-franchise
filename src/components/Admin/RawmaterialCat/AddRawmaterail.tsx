@@ -9,28 +9,28 @@ import {
   useAddRawMaterialCategory,
   useGetRawMaterialCategory,
 } from '@/lib/react-query/Admin/rawmaterial';
+import {useAuthContext} from '@/context/AuthContext';
 
 type FormValues = z.infer<typeof rawmaterialcategorySchema>;
 
 const AddRawMaterial: React.FC = () => {
+  const {user} = useAuthContext();
+  const admin_id = user?.id;
+  console.log('user', user);
   const methods = useForm<FormValues>({
     resolver: zodResolver(rawmaterialcategorySchema),
     defaultValues: {name: ''},
   });
-
-  const {mutate: addCategory, isPending} = useAddRawMaterialCategory();
-  const {
-    data: categoriesData,
-    isError: errorCategories,
-    isPending: pendingCategories,
-  } = useGetRawMaterialCategory();
+  const {mutate: addCategory, isPending: pendingAdd} =
+    useAddRawMaterialCategory(admin_id!);
+  const {data: categoriesData, isError: errorCategories} =
+    useGetRawMaterialCategory('');
   console.log('dataaaaaaa', categoriesData);
 
   const onSubmit = (data: FormValues) => {
-    addCategory({name: data.name});
+    addCategory(data);
     console.log('data', data);
   };
-
   return (
     <FormProvider {...methods}>
       <form
@@ -47,7 +47,7 @@ const AddRawMaterial: React.FC = () => {
         />
         <div className="flex justify-end">
           <GenericButton type="submit">
-            {isPending ? 'Saving...' : 'Save'}
+            {pendingAdd ? 'Saving...' : 'Save'}
           </GenericButton>
         </div>
       </form>
