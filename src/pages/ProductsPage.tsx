@@ -473,8 +473,8 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       </div>
 
       {/* Raw Material Table */}
-      <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+      <section className="bg-gray-50 rounded-lg border border-neutral-400 p-6 dark:border-form-strokedark">
+        <div className="mb-6 rounded-md bg-white px-6 py-4 text-neutral-500 shadow">
           <h1 className="text-xl font-bold">Raw Materials</h1>
         </div>
         <div className="max-h-96 overflow-auto">
@@ -502,8 +502,8 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       </section>
 
       {/* Extra Items Table */}
-      <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+      <section className="bg-gray-50 rounded-lg border border-neutral-400 p-6 dark:border-form-strokedark">
+        <div className="mb-6 rounded-md bg-white px-6 py-4 text-neutral-500 shadow">
           <h1 className="text-xl font-bold">Extra Items</h1>
         </div>
         <div className="max-h-72 overflow-auto">

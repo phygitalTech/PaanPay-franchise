@@ -37,78 +37,73 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <>
-      <h2 className="mb-9 text-center text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-        Sign In
-      </h2>
-      <form onSubmit={handleLogin}>
-        {/* Phone/Email Input */}
-        <div className="mb-6">
-          <label className="mb-2.5 block font-medium text-black dark:text-white">
-            Phone Number
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Enter your phone number"
-              value={credentials.phone}
-              onChange={(e) =>
-                setCredentials({...credentials, phone: e.target.value})
-              }
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
-            />
-            <span className="absolute right-4 top-4">
-              <FiMail size={22} />
-            </span>
+    <div className="flex min-h-screen w-screen items-center justify-between bg-white py-12 dark:bg-black">
+      <div className="max-w-md rounded-xl bg-white p-6 shadow-md dark:bg-boxdark md:p-10">
+        <h2 className="mb-8 text-center text-2xl font-bold text-black dark:text-white">
+          Sign In
+        </h2>
+        <form onSubmit={handleLogin} className="space-y-6">
+          {/* Phone Input */}
+          <div>
+            <label className="mb-2 block font-medium text-black dark:text-white">
+              Phone Number
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Enter your phone number"
+                value={credentials.phone}
+                onChange={(e) =>
+                  setCredentials({...credentials, phone: e.target.value})
+                }
+                className="w-full rounded-lg border border-stroke bg-transparent py-3 pl-6 pr-10 text-black outline-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
+              />
+              <span className="absolute right-4 top-3.5">
+                <FiMail size={20} />
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Password Input */}
-        <div className="mb-6">
-          <label className="mb-2.5 block font-medium text-black dark:text-white">
-            Password
-          </label>
-          <div className="relative">
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={credentials.password}
-              onChange={(e) =>
-                setCredentials({...credentials, password: e.target.value})
-              }
-              className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
-            />
-            <span className="absolute right-4 top-4">
-              <FiLock size={22} />
-            </span>
+          {/* Password Input */}
+          <div>
+            <label className="mb-2 block font-medium text-black dark:text-white">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={credentials.password}
+                onChange={(e) =>
+                  setCredentials({...credentials, password: e.target.value})
+                }
+                className="w-full rounded-lg border border-stroke bg-transparent py-3 pl-6 pr-10 text-black outline-none dark:border-form-strokedark dark:bg-form-input dark:text-white"
+              />
+              <span className="absolute right-4 top-3.5">
+                <FiLock size={20} />
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* Submit Button */}
-        <div className="mb-5">
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full rounded-lg bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:opacity-50"
             disabled={isPending}
+            className="w-full rounded-lg bg-primary p-3 text-sm font-semibold text-white transition hover:bg-opacity-90 disabled:opacity-50"
           >
             {isPending ? 'Signing in...' : 'Sign In'}
           </button>
-        </div>
 
-        {/* Sign Up Link */}
-        <div className="mt-6 text-center">
-          <p className="text-sm">
+          {/* Sign Up Link */}
+          <p className="text-gray-600 dark:text-gray-300 mt-6 text-center text-sm">
             Don’t have an account?{' '}
-            <Link className="text-primary" to="/signup">
+            <Link className="font-medium text-primary" to="/signup">
               Sign Up
             </Link>
           </p>
-        </div>
-      </form>
-    </>
-    // <div className="mx-auto mt-10 max-w-md">
-
-    // </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

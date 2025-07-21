@@ -50,7 +50,7 @@ export const getAllExtraItems = async (id: string) => {
 export const getAllProductCategory = async (id: string) => {
   try {
     const response = await api.get(`/admin/productCategory/${id}`);
-    console.log('category res', response);
+    console.log('product res', response);
     return response;
   } catch (error) {
     toast.error('Failed to get product category');
