@@ -53,6 +53,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   const [rawRows, setRawRows] = useState<Row[]>([
     {id: uid(), material: '', qty: {}},
   ]);
+
   const [extraRows, setExtraRows] = useState<Row[]>([
     {id: uid(), material: '', qty: {}},
   ]);
@@ -94,7 +95,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   };
 
   useEffect(() => {
+    if (mode !== 'edit') return;
     if (justUpdated) return;
+
     if (oneProductData?.data) {
       const product = oneProductData.data;
 
@@ -205,7 +208,6 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       if (oneProductData) {
         console.log('update payload', payload);
         const res = await updateProduct({payload});
-
         setJustUpdated(true);
         resetForm();
       } else {

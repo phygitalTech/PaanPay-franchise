@@ -1,4 +1,3 @@
-/* eslint-disable*/
 import {useAuthContext} from '@/context/AuthContext';
 import {
   useDeleteProduct,
@@ -102,7 +101,7 @@ const ProductList = () => {
               </tr>
             </thead>
             <tbody className="dark:bg-meta-4 [&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2 [&_td]:dark:border-strokedark [&_td]:dark:text-white">
-              {allProducts?.data?.map((each: any, index) => (
+              {allProducts?.data?.map((each: Product, index) => (
                 <tr
                   key={each.id}
                   className="hover:bg-gray-50 even:bg-gray-50/50 outline-none transition odd:bg-white focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input"
