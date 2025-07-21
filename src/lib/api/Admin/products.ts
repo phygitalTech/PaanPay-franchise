@@ -1,3 +1,4 @@
+import {StatusData} from '@/lib/react-query/Admin/products';
 import {api} from '@/utils/axios';
 import toast from 'react-hot-toast';
 
@@ -147,6 +148,29 @@ export const deleteProduct = async (id: string) => {
     return response;
   } catch (error) {
     toast.error('Failed to delete product');
+    throw error;
+  }
+};
+
+export const getProductCreationStatus = async (id: string) => {
+  try {
+    const response = await api.get(`/admin/product/status/${id}`);
+    return response;
+  } catch (error) {
+    toast.error('Failed to get product creation status');
+    throw error;
+  }
+};
+
+export const saveProductCreationStatus = async (
+  id: string,
+  data: StatusData,
+) => {
+  try {
+    const response = await api.put(`/admin/product/status/${id}`, data);
+    return response;
+  } catch (error) {
+    toast.error('Failed to save product creation status');
     throw error;
   }
 };

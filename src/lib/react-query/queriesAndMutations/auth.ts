@@ -70,9 +70,15 @@ export const LogIn = async (data: {phone: string; password: string}) => {
 
     // Drill down to the real token object
     const token = res.data?.data?.data?.token;
+    if (res.data?.data?.data?.role !== 'ADMIN') {
+      throw new Error('User is not authorized');
+    }
     if (!token?.accessToken) throw new Error('No access token returned');
+    console.log('res', res);
 
     const decoded = jwtDecode(token.accessToken);
+    console.log('token', token);
+    console.log('decoded');
 
     localStorage.setItem('token', JSON.stringify(token));
     localStorage.setItem('user', JSON.stringify(decoded));
@@ -93,7 +99,7 @@ export const useLogin = () => {
       toast.success('Login successful');
     },
     onError: (error) => {
-      toast.error('Login failed');
+      toast.error(error.message || 'Login failed');
     },
   });
 };

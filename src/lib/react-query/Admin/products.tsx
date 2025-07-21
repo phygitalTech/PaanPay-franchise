@@ -2,12 +2,13 @@ import {
   deleteProduct,
   getAllExtraItems,
   getAllProduct,
-  getAllProductById,
   getAllProductCategory,
   getAllRawMaterial,
   getProductById,
+  getProductCreationStatus,
   ProductPayload,
   saveProduct,
+  saveProductCreationStatus,
   updateProduct,
 } from '@/lib/api/Admin/products';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -32,6 +33,10 @@ export type ExtraItem = {
 
 export type ResExtra = {
   extraItems: ExtraItem[];
+};
+
+export type StatusData = {
+  status: boolean;
 };
 
 export const useGetAllRawMaterial = (id: string) =>
@@ -64,8 +69,15 @@ export const useGetAllProduct = (id: string) =>
 
 export const useGetProductById = (id: string) =>
   useQuery({
-    queryKey: ['product', id],
+    queryKey: ['product'],
     queryFn: () => getProductById(id),
+    enabled: !!id,
+  });
+
+export const useGetProductCreationStatus = (id: string) =>
+  useQuery({
+    queryKey: ['product_status'],
+    queryFn: () => getProductCreationStatus(id),
     enabled: !!id,
   });
 
@@ -107,6 +119,20 @@ export const useDeleteProduct = () => {
     },
     onError: () => {
       toast.error('Failed To Delete product');
+    },
+  });
+};
+
+export const useSaveProductCreationStatus = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: StatusData) => saveProductCreationStatus(id, data),
+    onSuccess: () => {
+      toast.success('Product Creation Status Saved Succesfully');
+      queryClient.invalidateQueries({queryKey: ['product_status']});
+    },
+    onError: () => {
+      toast.error('Failed To Save product creation status');
     },
   });
 };
