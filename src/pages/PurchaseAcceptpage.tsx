@@ -1,6 +1,4 @@
-{
-  /* eslint-disable */
-}
+/* eslint-disable */
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate} from '@tanstack/react-router';
 import {useForm, FormProvider} from 'react-hook-form';
@@ -16,6 +14,7 @@ import {
   useGetPurchaseById,
   useSubmitPurchaseRequest,
 } from '@/lib/react-query/Admin/Purchase/purchaseMutation';
+import {useAuthContext} from '@/context/AuthContext';
 
 type SubMerchantRow = {
   rawMaterialId: string;
@@ -31,9 +30,12 @@ const PurchaseAcceptPage: React.FC = () => {
 
   const navigate = useNavigate();
   const {id} = useParams({from: '/_app/request/purchaseaccept/$id'});
+  const {user} = useAuthContext();
 
   const {data: rawMaterials = [], isLoading: rawMaterialLoading} =
-    useGetAllRawMaterials();
+    useGetAllRawMaterials(user?.id!);
+
+  console.log(rawMaterials);
   const {data, isLoading, isError, error} = useGetPurchaseById(id);
   const {mutate: submitMutation} = useSubmitPurchaseRequest(id);
 
@@ -58,17 +60,31 @@ const PurchaseAcceptPage: React.FC = () => {
   }, [data]);
 
   const handleDropdownChange = (value: string, index: number) => {
-    const selectedRawMaterial = rawMaterials.find(
-      (item: any) => item.id === value,
+    const selected = rawMaterials.find((item: any) => item.id === value);
+
+    if (!selected) return;
+
+    const updatedData = inputData.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            rawMaterialId: selected.id,
+            rawMaterialName: selected.name,
+            unit: selected.unit,
+          }
+        : item,
     );
-    const updatedData = [...inputData];
-    updatedData[index].rawMaterialId = value;
-    updatedData[index].unit = selectedRawMaterial?.unit || '';
+
     setInputData(updatedData);
 
-    setValue(`rows.${index}.rawMaterialId`, value);
+    // Update RHF form fields
+    setValue(`rows.${index}.rawMaterialId`, selected.id);
     setValue(`rows.${index}.quantityInput`, updatedData[index].quantityInput);
   };
+
+  useEffect(() => {
+    console.log('inputData:', inputData);
+  }, [inputData]);
 
   const handleAddRow = () => {
     const newRow: SubMerchantRow = {
@@ -176,19 +192,21 @@ const PurchaseAcceptPage: React.FC = () => {
                     >
                       {/* Raw Material Dropdown */}
                       <td className="border border-stroke px-4 py-3 dark:border-strokedark">
-                        <GenericSearchDropdown
+                        <select
                           name={`rows.${index}.rawMaterialId`}
-                          options={rawMaterials.map((r: any) => ({
-                            label: r.name,
-                            value: r.id,
-                          }))}
-                          onChange={(val: string) =>
-                            handleDropdownChange(val, index)
+                          className="dark:border-gray-600 dark:bg-gray-700 text-gray-800 w-full rounded-md border border-gray bg-white p-1.5 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 dark:border-strokedark dark:bg-black dark:text-white sm:text-sm"
+                          value={row.rawMaterialId}
+                          onChange={(e) =>
+                            handleDropdownChange(e.target.value, index)
                           }
-                          className="z-30"
-                          dropdownClass="absolute left-0 top-full mt-1 w-[300px] rounded-md bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 shadow-lg z-[9999]"
-                          menuClass="max-h-60 overflow-auto"
-                        />
+                        >
+                          <option value="">Select Raw Material</option>
+                          {rawMaterials.map((r: any) => (
+                            <option key={r.id} value={r.id}>
+                              {r.name}
+                            </option>
+                          ))}
+                        </select>
                       </td>
 
                       {/* Quantity Input */}
@@ -204,7 +222,7 @@ const PurchaseAcceptPage: React.FC = () => {
                       {/* Unit */}
                       <td className="border border-stroke px-4 py-3 dark:border-strokedark">
                         <span className="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-200 inline-flex rounded-full px-2 text-xs font-semibold">
-                          {row.unit || ''}
+                          {row?.unit}
                         </span>
                       </td>
 

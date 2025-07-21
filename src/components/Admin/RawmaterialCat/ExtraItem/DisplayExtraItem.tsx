@@ -48,26 +48,6 @@ const DisplayExtraItem: React.FC = () => {
   const columns: Column<ExtraItem>[] = [
     {header: 'Name', accessor: 'name'},
     {header: 'Price', accessor: 'price'},
-    {
-      header: 'Action',
-      accessor: 'actions',
-      cell: (row) => (
-        <div className="flex justify-center gap-2">
-          <button
-            className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-            onClick={() => handleEdit(row)}
-          >
-            Edit
-          </button>
-          <button
-            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-            onClick={() => handleDelete(row)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
   ];
 
   console.log('Extra Items Fetched:', extraItemsData);
@@ -78,14 +58,12 @@ const DisplayExtraItem: React.FC = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-        <h1 className="text-xl font-bold">Extra Items List</h1>
-      </div>
-      <GenericTables
+      <GenericTable
         data={extraItemsData || []}
         columns={columns}
         itemsPerPage={5}
         action={true}
+        title="Extra Items"
         onEdit={handleEdit}
         onDelete={(rowIndex) => handleDelete(rowIndex)}
         searchAble={true}

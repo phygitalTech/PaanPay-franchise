@@ -12,9 +12,7 @@ const ExtraItemPage: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
-          <DisplayExtraItemTable />
-        </div>
+        <DisplayExtraItemTable />
       </div>
     </div>
   );

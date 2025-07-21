@@ -6,6 +6,7 @@ import {
 import {useNavigate} from '@tanstack/react-router';
 import React from 'react';
 import {FiBox, FiEdit, FiTrash} from 'react-icons/fi';
+import GenericTable, {Column} from '@/components/Forms/Table/GenericTable';
 
 export type Product = {
   id: string;
@@ -65,88 +66,68 @@ const ProductList = () => {
   const adminId = user?.id;
 
   const navigate = useNavigate();
-
   const {data: allProducts} = useGetAllProduct(adminId!);
   const {mutateAsync: deleteProduct} = useDeleteProduct();
-
-  console.log('all products', allProducts);
 
   const onEditPress = (item: Product) => {
     navigate({to: `/product/updateproduct/${item.id}`});
   };
 
-  const onDeleePress = (item: Product) => {
-    deleteProduct(item.id);
+  const onDeletePress = (item: Product) => {
+    if (confirm('Are you sure you want to delete this product?')) {
+      deleteProduct(item.id);
+    }
   };
+
+  const columns: Column<Product>[] = [
+    {
+      header: '#',
+      accessor: 'id',
+      render: (_row, index) => <span>{index + 1}</span>,
+    },
+    {
+      header: 'Name',
+      accessor: 'name',
+    },
+    {
+      header: 'Category',
+      accessor: 'category',
+      render: (row) => row?.category?.name || '-',
+    },
+    {
+      header: 'Desc',
+      accessor: 'description',
+    },
+    {
+      header: 'Image',
+      accessor: 'image',
+      render: (row) =>
+        row.image ? (
+          <img
+            src={row.image}
+            alt={row.name}
+            className="bg-gray-100 h-16 w-16 rounded-lg object-cover"
+          />
+        ) : (
+          <div className="bg-gray-100 flex h-16 w-16 items-center justify-center rounded-lg">
+            <FiBox size={24} className="text-gray-400" />
+          </div>
+        ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
-      <header className="rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-        <h1 className="text-xl font-semibold leading-tight">Product List</h1>
-        <p className="text-sm opacity-90">Manage your products</p>
-      </header>
-
-      {/* border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark */}
-      <section className="rounded-md bg-white shadow">
-        <div className="max-h-[70vh] overflow-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-50 sticky top-0 z-10 bg-neutral-100 text-xs uppercase tracking-wider">
-              <tr className="dark:bg-meta-4 [&_th]:border [&_th]:border-neutral-200 [&_th]:px-4 [&_th]:py-3 [&_th]:text-left [&_th]:dark:border-strokedark [&_th]:dark:text-white">
-                <th>#</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Desc</th>
-                <th>Image</th>
-                <th>Cancle</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody className="dark:bg-meta-4 [&_td]:border [&_td]:border-neutral-200 [&_td]:px-4 [&_td]:py-2 [&_td]:dark:border-strokedark [&_td]:dark:text-white">
-              {allProducts?.data?.map((each: Product, index) => (
-                <tr
-                  key={each.id}
-                  className="hover:bg-gray-50 even:bg-gray-50/50 outline-none transition odd:bg-white focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input"
-                >
-                  <td>{index + 1}</td>
-                  <td>{each?.name}</td>
-                  <td className="whitespace-nowrap">{each?.category?.name}</td>
-
-                  <td>{each?.description}</td>
-                  <td className="max-w-[15rem] truncate">
-                    {' '}
-                    {each.image ? (
-                      <img
-                        src={each.image}
-                        alt={each.name}
-                        className="bg-gray-100 mr-4 h-16 w-16 rounded-lg object-cover"
-                      />
-                    ) : (
-                      <div className="bg-gray-100 mr-4 flex h-16 w-16 items-center justify-center rounded-lg">
-                        <FiBox size={24} className="text-gray-400" />
-                      </div>
-                    )}
-                  </td>
-                  <td className="">
-                    {' '}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleePress(each);
-                      }}
-                    >
-                      <FiTrash size={20} className="ml-4 text-red-500" />
-                    </button>
-                  </td>
-                  <td>
-                    <button onClick={() => onEditPress(each)}>
-                      <FiEdit size={20} className="ml-4 text-blue-500" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <GenericTable
+        data={allProducts?.data || []}
+        columns={columns}
+        itemsPerPage={10}
+        searchAble
+        action
+        title="Product List"
+        onEdit={(item) => onEditPress(item)}
+        onDelete={(item) => onDeletePress(item)}
+      />
     </div>
   );
 };

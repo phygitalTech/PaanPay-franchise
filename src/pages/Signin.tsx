@@ -13,7 +13,6 @@ const SignIn: React.FC = () => {
   });
 
   const {mutateAsync: login, isPending, isSuccess} = useLogin();
-
   const {user, isAuthenticated} = useAuthContext();
 
   useEffect(() => {
@@ -37,8 +36,8 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-screen items-center justify-between bg-white py-12 dark:bg-black">
-      <div className="max-w-md rounded-xl bg-white p-6 shadow-md dark:bg-boxdark md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-md dark:bg-boxdark md:p-10">
         <h2 className="mb-8 text-center text-2xl font-bold text-black dark:text-white">
           Sign In
         </h2>
@@ -95,12 +94,12 @@ const SignIn: React.FC = () => {
           </button>
 
           {/* Sign Up Link */}
-          <p className="text-gray-600 dark:text-gray-300 mt-6 text-center text-sm">
+          {/* <p className="text-gray-600 dark:text-gray-300 mt-6 text-center text-sm">
             Don’t have an account?{' '}
             <Link className="font-medium text-primary" to="/signup">
               Sign Up
             </Link>
-          </p>
+          </p> */}
         </form>
       </div>
     </div>

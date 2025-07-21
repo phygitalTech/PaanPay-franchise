@@ -12,7 +12,7 @@ const AddRawMaterialPage: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
+        <div>
           <DisplayAddRawMaterial />
         </div>
       </div>

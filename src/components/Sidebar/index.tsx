@@ -17,17 +17,12 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
   const sidebarRoutes = [
     {
       label: 'Home ',
-      path: '/',
+      path: '/reports',
       icon: <PiSquaresFourLight size={22} />,
     },
     {
       label: 'Customer List ',
       path: '/customerlist',
-      icon: <PiSquaresFourLight size={22} />,
-    },
-    {
-      label: 'Reports',
-      path: '/reports',
       icon: <PiSquaresFourLight size={22} />,
     },
     {
@@ -41,7 +36,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       icon: <PiSquaresFourLight size={22} />,
       subRoutes: [
         {
-          label: 'Add Raw Material Category',
+          label: 'Raw Material Category',
           path: '/rawmaterial/addrawmaterial',
           icon: <PiSquaresFourLight size={22} />,
         },
@@ -51,14 +46,19 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
           icon: <PiSquaresFourLight size={22} />,
         },
         {
-          label: 'Extra Item',
+          label: 'Extra Items',
           path: '/rawmaterial/extraitemraw',
           icon: <PiSquaresFourLight size={22} />,
         },
       ],
     },
     {
-      label: 'Product',
+      label: 'Product Category',
+      path: '/productcategory/productcategory',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
+      label: 'Products',
       icon: <PiSquaresFourLight size={22} />,
       subRoutes: [
         {
@@ -73,14 +73,15 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
         },
       ],
     },
-    {
-      label: 'Product Category',
-      path: '/productcategory/productcategory',
-      icon: <PiSquaresFourLight size={22} />,
-    },
+
     {
       label: 'Purchase Request',
       path: '/request/purchaserequest',
+      icon: <PiSquaresFourLight size={22} />,
+    },
+    {
+      label: 'Reports',
+      path: '/reports',
       icon: <PiSquaresFourLight size={22} />,
     },
     {

@@ -11,9 +11,7 @@ const Rawmaterial: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
-          <DisplayRawmaterialdata />
-        </div>
+        <DisplayRawmaterialdata />
       </div>
     </div>
   );

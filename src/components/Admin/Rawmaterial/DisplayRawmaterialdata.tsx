@@ -9,6 +9,7 @@ import {
 import {useNavigate} from '@tanstack/react-router';
 import GenericTables, {Column} from '@/components/Forms/Table/GenericTables';
 import {useAuthContext} from '@/context/AuthContext';
+import GenericTable from '@/components/Forms/Table/GenericTable';
 
 type RawMaterial = {
   id: string;
@@ -49,26 +50,6 @@ const DisplayRawMaterialTable: React.FC = () => {
     {header: 'Category', accessor: 'categoryName', sortable: true},
     {header: 'Unit', accessor: 'unit'},
     {header: 'Price', accessor: 'price'},
-    {
-      header: 'Action',
-      accessor: 'actions',
-      cell: (row) => (
-        <div className="flex justify-center gap-2">
-          <button
-            className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-            onClick={() => handleEdit(row)}
-          >
-            Edit
-          </button>
-          <button
-            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-            onClick={() => handleDelete(row)}
-          >
-            Delete
-          </button>
-        </div>
-      ),
-    },
   ];
 
   const tableData: RawMaterial[] =
@@ -83,17 +64,15 @@ const DisplayRawMaterialTable: React.FC = () => {
 
   return (
     <div className="mt-10">
-      <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-        <h1 className="text-xl font-bold">Raw Material List</h1>
-      </div>
-      <GenericTables
+      <GenericTable
         data={tableData}
         columns={columns}
         itemsPerPage={5}
-        action={true}
+        action
+        title="Raw Material List"
         onDelete={handleDelete}
         onEdit={handleEdit}
-        searchAble={true}
+        searchAble
       />
     </div>
   );
