@@ -19,7 +19,7 @@ const SettingPage = () => {
 
   return (
     <div className="bg-gray-100 flex min-h-screen items-center justify-center">
-      <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-xl border border-stroke bg-white p-6 shadow-lg">
+      <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-xl border border-stroke bg-white p-6 shadow-lg dark:border-form-strokedark dark:bg-boxdark">
         {enabled ? (
           <p className="text-gray-800 text-lg font-semibold">
             Product Creation Allowed
