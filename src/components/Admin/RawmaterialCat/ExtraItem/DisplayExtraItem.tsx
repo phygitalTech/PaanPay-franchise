@@ -7,6 +7,7 @@ import {
 import {useNavigate} from '@tanstack/react-router';
 import toast from 'react-hot-toast';
 import GenericTables from '@/components/Forms/Table/GenericTables';
+import {useAuthContext} from '@/context/AuthContext';
 
 interface ExtraItem {
   id: string;
@@ -15,13 +16,15 @@ interface ExtraItem {
 }
 
 const DisplayExtraItem: React.FC = () => {
+  const {user} = useAuthContext();
+  const adminId = user?.id;
   const Navigate = useNavigate();
   const {
     data: extraItemsData,
     isLoading,
     isError,
     error,
-  } = useGetExtraItemsData();
+  } = useGetExtraItemsData(adminId!);
   console.log('Extra Items Data:', extraItemsData);
   const {mutate: deleteExtraItem} = useDeleteExtraItem();
 
@@ -45,6 +48,26 @@ const DisplayExtraItem: React.FC = () => {
   const columns: Column<ExtraItem>[] = [
     {header: 'Name', accessor: 'name'},
     {header: 'Price', accessor: 'price'},
+    {
+      header: 'Action',
+      accessor: 'actions',
+      cell: (row) => (
+        <div className="flex justify-center gap-2">
+          <button
+            className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
+            onClick={() => handleEdit(row)}
+          >
+            Edit
+          </button>
+          <button
+            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+            onClick={() => handleDelete(row)}
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
   ];
 
   console.log('Extra Items Fetched:', extraItemsData);
@@ -64,7 +87,7 @@ const DisplayExtraItem: React.FC = () => {
         itemsPerPage={5}
         action={true}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        onDelete={(rowIndex) => handleDelete(rowIndex)}
         searchAble={true}
       />
     </div>

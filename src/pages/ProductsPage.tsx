@@ -447,7 +447,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             <img
               src={imagePreview}
               alt="Preview"
-              className="mt-2 max-h-52 w-full rounded-lg object-cover dark:border-form-strokedark dark:bg-boxdark"
+              className="mt-2 max-h-52 w-full rounded-full object-cover dark:border-form-strokedark dark:bg-boxdark"
             />
           )}
         </div>
@@ -474,7 +474,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
 
       {/* Raw Material Table */}
       <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
-        <h3 className="mb-4 text-lg font-semibold">Raw Materials</h3>
+        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <h1 className="text-xl font-bold">Raw Materials</h1>
+        </div>
         <div className="max-h-96 overflow-auto">
           <table className="min-w-max text-sm">
             <TableHead />
@@ -501,7 +503,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
 
       {/* Extra Items Table */}
       <section className="bg-gray-50 rounded-lg border border-stroke p-6 dark:border-form-strokedark">
-        <h3 className="mb-4 text-lg font-semibold">Extra Items</h3>
+        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <h1 className="text-xl font-bold">Extra Items</h1>
+        </div>
         <div className="max-h-72 overflow-auto">
           <table className="min-w-max text-sm">
             <ExtraHead />

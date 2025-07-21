@@ -48,7 +48,7 @@ export const useGetAllRawMaterial = (id: string) =>
 
 export const useGetAllExtraItems = (id: string) =>
   useQuery<ResExtra[]>({
-    queryKey: ['extra', id],
+    queryKey: ['extra-item', id],
     queryFn: () => getAllExtraItems(id),
     enabled: !!id,
   });

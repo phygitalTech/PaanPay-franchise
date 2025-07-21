@@ -9,10 +9,13 @@ import {
   useAddExtraItem,
   useGetExtraItemsDataByid,
 } from '@/lib/react-query/Admin/rawmaterial';
+import {useAuthContext} from '@/context/AuthContext';
 
 type FormValues = z.infer<typeof rawmaterialExtraSchema>;
 
 const ExtraItem: React.FC = () => {
+  const {user} = useAuthContext();
+  const adminId = user?.id;
   const methods = useForm<FormValues>({
     resolver: zodResolver(rawmaterialExtraSchema),
     defaultValues: {
@@ -21,7 +24,7 @@ const ExtraItem: React.FC = () => {
     },
   });
 
-  const {mutate: addItem} = useAddExtraItem();
+  const {mutate: addItem} = useAddExtraItem(adminId!);
   // console.log('Added Extra Itemsss:', addItem);
   const {
     data: extraItemsData,

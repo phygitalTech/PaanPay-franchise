@@ -16,6 +16,7 @@ import {
   useGetCategoryData,
 } from '@/lib/react-query/Admin/rawmaterial';
 import {addRawMaterial} from '@/lib/api/Admin/rawmaterial';
+import {useAuthContext} from '@/context/AuthContext';
 
 export type Category = {
   id: string;
@@ -30,6 +31,8 @@ export type RawMaterialFormValues = {
 };
 
 const SelectRawMaterial: React.FC = () => {
+  const {user} = useAuthContext();
+  const adminId = user?.id;
   const methods = useForm<RawMaterialFormValues>({
     resolver: zodResolver(rawMaterialValidationSchema),
     defaultValues: {
@@ -40,10 +43,12 @@ const SelectRawMaterial: React.FC = () => {
     },
   });
 
-  const {mutate: addRawMaterialAdmin, isPending} = useAddRawMaterialAdmin();
+  const {mutate: addRawMaterialAdmin, isPending} = useAddRawMaterialAdmin(
+    adminId!,
+  );
   console.log('first');
 
-  const {data: categoriesData, isError, error} = useGetCategoryData();
+  const {data: categoriesData, isError, error} = useGetCategoryData(adminId!);
 
   const onSubmit = async (data: RawMaterialFormValues) => {
     const payload = {

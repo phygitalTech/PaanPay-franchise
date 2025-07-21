@@ -7,7 +7,8 @@ import {
   useGetAllRawMaterials,
 } from '@/lib/react-query/Admin/rawmaterial';
 import {useNavigate} from '@tanstack/react-router';
-import GenericTables from '@/components/Forms/Table/GenericTables';
+import GenericTables, {Column} from '@/components/Forms/Table/GenericTables';
+import {useAuthContext} from '@/context/AuthContext';
 
 type RawMaterial = {
   id: string;
@@ -19,7 +20,9 @@ type RawMaterial = {
 };
 
 const DisplayRawMaterialTable: React.FC = () => {
-  const {data: rawMaterialData} = useGetAllRawMaterials();
+  const {user} = useAuthContext();
+  const adminId = user?.id;
+  const {data: rawMaterialData} = useGetAllRawMaterials(adminId!);
   console.log('rawMaterialData', rawMaterialData);
   const {mutate: deleteRawMaterial} = useDeleteRawMaterialAdmin();
 
@@ -46,6 +49,26 @@ const DisplayRawMaterialTable: React.FC = () => {
     {header: 'Category', accessor: 'categoryName', sortable: true},
     {header: 'Unit', accessor: 'unit'},
     {header: 'Price', accessor: 'price'},
+    {
+      header: 'Action',
+      accessor: 'actions',
+      cell: (row) => (
+        <div className="flex justify-center gap-2">
+          <button
+            className="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
+            onClick={() => handleEdit(row)}
+          >
+            Edit
+          </button>
+          <button
+            className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+            onClick={() => handleDelete(row)}
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
   ];
 
   const tableData: RawMaterial[] =

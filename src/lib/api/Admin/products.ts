@@ -39,8 +39,8 @@ export const getAllRawMaterial = async (id: string) => {
 export const getAllExtraItems = async (id: string) => {
   try {
     const response = await api.get(`/admin/extraItem/${id}`);
-    console.log('ressextra', response);
-    return response;
+    console.log('datsaaaaaaaaaaaa', response.data);
+    return response.data.extraItems;
   } catch (error) {
     toast.error('Failed to get extra item');
     throw error;

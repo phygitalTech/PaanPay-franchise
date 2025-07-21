@@ -6,6 +6,7 @@ import {
   useDeleteRawMaterialCategory,
 } from '@/lib/react-query/Admin/rawmaterial';
 import {useNavigate} from '@tanstack/react-router';
+import {useAuthContext} from '@/context/AuthContext';
 
 type RawMaterialCategory = {
   id: string;
@@ -15,12 +16,15 @@ type RawMaterialCategory = {
 const DisplayAddRawMaterial: React.FC = () => {
   const navigate = useNavigate();
 
+  const {user} = useAuthContext();
+  const admin_id = user?.id;
+
   const {
     data: categoryData,
     isLoading,
     isError,
     error,
-  } = useGetRawMaterialCategory();
+  } = useGetRawMaterialCategory(admin_id!);
 
   const {mutate: deleteCategory} = useDeleteRawMaterialCategory();
 
@@ -61,9 +65,9 @@ const DisplayAddRawMaterial: React.FC = () => {
     },
   ];
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError)
-    return <div>Error: {error?.message || 'Failed to load categories'}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError)
+  //   return <div>Error: {error?.message || 'Failed to load categories'}</div>;
 
   return (
     <div className="p-4">

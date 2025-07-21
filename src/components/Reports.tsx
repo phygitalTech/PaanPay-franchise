@@ -180,16 +180,16 @@ const Reports = () => {
     return rows;
   };
 
-  if (isLoading)
-    return (
-      <div className="text-gray-500 p-4 text-center">
-        Loading report data...
-      </div>
-    );
-  if (!data)
-    return (
-      <div className="p-4 text-center text-red-500">Failed to load data.</div>
-    );
+  // if (isLoading)
+  //   return (
+  //     <div className="text-gray-500 p-4 text-center">
+  //       Loading report data...
+  //     </div>
+  //   );
+  // if (!data)
+  //   return (
+  //     <div className="p-4 text-center text-red-500">Failed to load data.</div>
+  //   );
 
   return (
     <div className="space-y-4">

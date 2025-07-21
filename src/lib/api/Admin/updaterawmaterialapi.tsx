@@ -3,7 +3,7 @@ import {AxiosError} from 'axios';
 
 const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 export const getRawMaterialById = async (id: string) => {
-  const res = await api.get(`/admin/rawMaterial/single/${id || STATIC_ID}`);
+  const res = await api.get(`/admin/rawMaterial/single/${id}`);
   return res.data;
 };
 
@@ -44,10 +44,7 @@ export const updateCategoryAdmin = async ({
   id?: string;
 }) => {
   try {
-    const response = await api.put(
-      `/admin/rawMaterialCategory/${id || STATIC_ID}`,
-      data,
-    );
+    const response = await api.put(`/admin/rawMaterialCategory/${id}`, data);
     //console.log('Category updated:----------', response.data);
     return response.data;
   } catch (error) {
