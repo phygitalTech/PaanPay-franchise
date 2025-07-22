@@ -4,6 +4,20 @@ import {useEffect, useRef, useState} from 'react';
 import {FaArrowLeftLong} from 'react-icons/fa6';
 import {IoIosArrowDown} from 'react-icons/io';
 import {PiSquaresFourLight} from 'react-icons/pi';
+import {
+  FaHome,
+  FaClipboardList,
+  FaBoxes,
+  FaCogs,
+  FaFileAlt,
+} from 'react-icons/fa';
+import {MdCategory, MdProductionQuantityLimits} from 'react-icons/md';
+import {GiMaterialsScience, GiReceiveMoney} from 'react-icons/gi';
+import {RiCustomerService2Line} from 'react-icons/ri';
+import {HiOutlineUsers} from 'react-icons/hi';
+import {BsBoxSeam} from 'react-icons/bs';
+import {BiPackage} from 'react-icons/bi';
+import {AiOutlineSetting} from 'react-icons/ai';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
 
@@ -16,78 +30,76 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
 
   const sidebarRoutes = [
     {
-      label: 'Home ',
+      label: 'Home',
       path: '/reports',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <FaHome size={22} />,
     },
     {
-      label: 'Customer List ',
+      label: 'Customer List',
       path: '/customerlist',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <RiCustomerService2Line size={22} />,
     },
     {
       label: 'Merchant List',
       path: '/merchantlist',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <HiOutlineUsers size={22} />,
     },
-
     {
       label: 'Raw Material',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <GiMaterialsScience size={22} />,
       subRoutes: [
         {
           label: 'Raw Material Category',
           path: '/rawmaterial/addrawmaterial',
-          icon: <PiSquaresFourLight size={22} />,
+          icon: <MdCategory size={22} />,
         },
         {
           label: 'Raw Material',
           path: '/rawmaterial/rawmaterial',
-          icon: <PiSquaresFourLight size={22} />,
+          icon: <GiMaterialsScience size={22} />,
         },
         {
           label: 'Extra Items',
           path: '/rawmaterial/extraitemraw',
-          icon: <PiSquaresFourLight size={22} />,
+          icon: <BsBoxSeam size={22} />,
         },
       ],
     },
     {
       label: 'Product Category',
       path: '/productcategory/productcategory',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <MdCategory size={22} />,
     },
     {
       label: 'Products',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <MdProductionQuantityLimits size={22} />,
       subRoutes: [
         {
           label: 'Add Product',
           path: '/product/saveproduct',
-          icon: <PiSquaresFourLight size={22} />,
+          icon: <BiPackage size={22} />,
         },
         {
           label: 'Product',
           path: '/productlist',
-          icon: <PiSquaresFourLight size={22} />,
+          icon: <MdProductionQuantityLimits size={22} />,
         },
       ],
     },
-
     {
       label: 'Purchase Request',
       path: '/request/purchaserequest',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <GiReceiveMoney size={22} />,
     },
     {
       label: 'Reports',
       path: '/reports',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <FaFileAlt size={22} />,
     },
     {
       label: 'Setting',
       path: '/setting/setting',
-      icon: <PiSquaresFourLight size={22} />,
+      icon: <AiOutlineSetting size={22} />,
     },
   ];
 

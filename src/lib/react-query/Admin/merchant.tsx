@@ -3,7 +3,6 @@ import {api} from '@/utils/axios';
 import {useMutation, useQuery, QueryClient} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 export const useGetMerchantById = (id: string) =>
   useQuery({
     queryKey: ['merchant', id],
@@ -20,6 +19,7 @@ interface InventoryItem {
 }
 
 interface MerchantInventoryPayload {
+  adminId: string;
   merchantId: string;
   items: InventoryItem[];
 }
@@ -30,14 +30,14 @@ export const useSubmitMerchantInventory = () => {
     mutationFn: async (payload: MerchantInventoryPayload) => {
       try {
         const response = await api.post(
-          `/admin/purchase/${STATIC_ID}`,
+          `/admin/purchase/${payload.adminId}`,
           payload,
         );
-        console.log('Response from submit:', response.data);
+        toast.success('Inventory submitted successfully');
         return response.data;
       } catch (error) {
-        console.error('Error submitting inventory:', error);
-        throw error;
+        toast.error('Failed to submit inventory');
+        throw error.response.data.message;
       }
     },
   });

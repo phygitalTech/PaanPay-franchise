@@ -7,7 +7,6 @@ import {
 } from '../../../api/Admin/purchaseAPI';
 import toast from 'react-hot-toast';
 import {api} from '@/utils/axios';
-const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 
 export const useGetPurchaseRequest = (id: string) => {
   return useQuery({
@@ -46,7 +45,7 @@ export const useSubmitPurchaseRequest = (id: string) => {
   return useMutation({
     mutationFn: async (payload: any) => {
       const response = await api.post(
-        `/admin/purchase/requests/${id || STATIC_ID}`,
+        `/admin/purchase/requests/${id}`,
         payload,
       );
       console.log('Submit response ----', response);

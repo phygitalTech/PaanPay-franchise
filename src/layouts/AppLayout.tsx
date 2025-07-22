@@ -1,26 +1,25 @@
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import {useAuthContext} from '@/context/AuthContext';
-import {Navigate, Outlet, useNavigate} from '@tanstack/react-router';
+import {Outlet, useNavigate, useLocation} from '@tanstack/react-router';
 import {useEffect, useState} from 'react';
 
 const AppLayout = () => {
   const {isAuthenticated, user} = useAuthContext();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
-  console.log('user', user);
-  console.log('auth', isAuthenticated);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate({to: '/signin'});
       return;
     }
-    if (user?.role === 'ADMIN') {
-      navigate({to: '/'});
+
+    if (user?.role === 'ADMIN' && location.pathname === '/') {
+      navigate({to: '/'}); // 🛠 redirect to ADMIN dashboard or landing page
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate, location.pathname]);
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">

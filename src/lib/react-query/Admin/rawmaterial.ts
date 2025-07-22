@@ -1,28 +1,23 @@
 {
   /* eslint-disable  */
 }
-import {z} from 'zod';
 import {
-  addRawMaterialCategoryAPI,
-  getRawMaterialCategoryByIdAPI,
-  deleteRawMaterialCategoryAPI,
-  addRawMaterial,
-  fetchCategories,
-  getAllrawmaterial,
-  deleteRawMaterialAdmin,
   addExtraItem,
+  addRawMaterial,
+  addRawMaterialCategoryAPI,
   deleteExtraItem,
-  fetchExtraItemsData,
-  fetchExtraItems,
+  deleteRawMaterialAdmin,
+  deleteRawMaterialCategoryAPI,
+  fetchCategories,
   fetchExtraItemById,
+  fetchExtraItemsData,
+  getAllrawmaterial,
+  getRawMaterialCategoryByIdAPI,
   Payload,
 } from '@/lib/api/Admin/rawmaterial';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import {api} from '@/utils/axios';
 import {} from './../../api/Admin/rawmaterial';
-
-const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 
 export const useAddRawMaterialCategory = (id: string) => {
   const queryClient = useQueryClient();

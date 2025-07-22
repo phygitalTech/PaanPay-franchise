@@ -1,7 +1,4 @@
-{
-  /* eslint-disable */
-}
-
+/* eslint-disable */
 import React, {useState, useEffect} from 'react';
 import {useParams, useNavigate} from '@tanstack/react-router';
 import {BiArrowBack} from 'react-icons/bi';
@@ -12,8 +9,8 @@ import {
 } from '@/lib/react-query/Admin/merchant';
 import {Controller, FormProvider, useForm} from 'react-hook-form';
 import GenericButton from '@/components/Forms/Buttons/GenericButton';
-
-import GenericTables, {Column} from '@/components/Forms/Table/GenericTables';
+import GenericTable, {Column} from '@/components/Forms/Table/GenericTable';
+import {useAuthContext} from '@/context/AuthContext';
 
 type SubMerchantRow = {
   merchantId: string;
@@ -25,14 +22,25 @@ type SubMerchantRow = {
   unit: string;
 };
 
+type FormValues = {
+  quantityInput: Record<string, string>;
+};
+
 const MerchantDetailed: React.FC = () => {
   const navigate = useNavigate();
+  const {user} = useAuthContext();
   const {id} = useParams({from: '/_app/merchantdetail/$id'}) as {id: string};
 
   const {data, isLoading, isError, error} = useGetMerchantById(id);
-  const mutation = useSubmitMerchantInventory();
+  const {mutateAsync: submitMerchantInventory, isPending} =
+    useSubmitMerchantInventory();
   const [inputData, setInputData] = useState<SubMerchantRow[]>([]);
-  const methods = useForm();
+
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      quantityInput: {},
+    },
+  });
 
   useEffect(() => {
     if (Array.isArray(data?.data)) {
@@ -45,62 +53,70 @@ const MerchantDetailed: React.FC = () => {
         quantity: 0,
         quantityInput: '0',
       }));
+
+      // Set default values for each row input
+      const defaultQuantityInputs: Record<string, string> = {};
+      rows.forEach((row) => {
+        defaultQuantityInputs[row.rawMaterialId ?? ''] = '0';
+      });
+
+      methods.reset({
+        quantityInput: defaultQuantityInputs,
+      });
+
       setInputData(rows);
     }
   }, [data]);
 
-  const handleSubmit = (formValues: any) => {
-    const updatedInputData = [...inputData];
-
-    // Update the state from react-hook-form values
-    updatedInputData.forEach((row, index) => {
-      const val = formValues.quantityInput?.[index] || '0';
+  const handleSubmit = (formValues: FormValues) => {
+    const updatedInputData = inputData.map((row) => {
+      const val = formValues.quantityInput?.[row.rawMaterialId ?? ''] || '0';
       const parsed = Number(val);
-      row.quantityInput = val;
-      row.quantity = isNaN(parsed) ? 0 : parsed;
+
+      return {
+        ...row,
+        quantityInput: val,
+        quantity: isNaN(parsed) ? 0 : parsed,
+      };
     });
 
     const filteredItems = updatedInputData
-      .filter((item) => Number(item.quantity) > 0)
+      .filter((item) => item.quantity > 0)
       .map((item) => ({
         inventory: item.inventory.toString(),
         rawMaterialId: item.rawMaterialId?.toString() ?? '',
         rawMaterialName: item.rawMaterialName,
         unit: item.unit,
-        quantity: Number(item.quantity),
+        quantity: item.quantity,
       }));
 
-    const payload = {
-      merchantId: id,
+    submitMerchantInventory({
+      adminId: user?.id!,
       items: filteredItems,
-    };
-
-    mutation.mutate(payload, {
-      onSuccess: () => toast.success('Inventory submitted successfully!'),
-      onError: () => toast.error('Failed to submit inventory.'),
+      merchantId: id!,
     });
   };
 
   const columns: Column<SubMerchantRow>[] = [
     {
-      header: 'Inventory',
-      accessor: 'inventory',
+      header: 'Raw Material',
+      accessor: 'rawMaterialName',
     },
     {
       header: 'Unit',
       accessor: 'unit',
     },
     {
-      header: 'Raw Material',
-      accessor: 'rawMaterialName',
+      header: 'Inventory',
+      accessor: 'inventory',
     },
     {
       header: 'Quantity',
       accessor: 'quantityInput',
-      cell: (_row: any, index: number) => (
+      render: (row: SubMerchantRow) => (
         <Controller
           control={methods.control}
-          name={`quantityInput.${index}`}
+          name={`quantityInput.${row.rawMaterialId}`}
           render={({field}) => (
             <input
               {...field}
@@ -136,15 +152,15 @@ const MerchantDetailed: React.FC = () => {
 
   return (
     <FormProvider {...methods}>
-      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen px-4 py-6 transition-colors duration-200 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex items-center">
+      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
+        <div className="mx-auto">
+          <div className="flex items-center">
             <button
               onClick={() => navigate({to: '/merchantlist'})}
-              className="flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-lg font-semibold text-graydark transition-colors duration-200 dark:text-white"
             >
-              <BiArrowBack className="text-lg" />
-              Back to Merchant List
+              <BiArrowBack className="text-lg text-graydark dark:text-white" />
+              Merchant List
             </button>
           </div>
 
@@ -153,17 +169,17 @@ const MerchantDetailed: React.FC = () => {
           </h1>
 
           {/* Generic Table */}
-          <GenericTables data={inputData} columns={columns} />
+          <GenericTable data={inputData} columns={columns} paginationOff />
 
           {/* Submit Button */}
           <div className="mt-6 flex justify-end">
             <GenericButton
               type="button"
               onClick={methods.handleSubmit(handleSubmit)}
-              className="rounded-lg bg-green-600 px-6 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
-              disabled={mutation.status === 'pending'}
+              className="rounded-md bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
+              disabled={isPending}
             >
-              {mutation.status === 'pending' ? 'Submitting...' : 'Submit'}
+              {isPending ? 'Submitting...' : 'Submit'}
             </GenericButton>
           </div>
         </div>

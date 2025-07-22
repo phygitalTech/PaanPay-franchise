@@ -1,6 +1,5 @@
 import {api} from '@/utils/axios';
 import {AxiosError} from 'axios';
-const STATIC_ID = '4d3b46a8-e9b3-4fc8-a2fa-9cf0164569c5';
 export const getExtraItemById = async (id: string) => {
   try {
     const response = await api.get(`/admin/extraItem/single/${id}`);
