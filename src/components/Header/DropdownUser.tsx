@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import {useState} from 'react';
 import {Link} from '@tanstack/react-router';
 import ClickOutside from '../ClickOutside';
@@ -6,6 +8,7 @@ import {useAuthContext} from '@/context/AuthContext';
 import {IoIosArrowDown} from 'react-icons/io';
 import {useLogoutUser} from '@/lib/react-query/queriesAndMutations/auth';
 import {QUERY_KEYS} from '@/lib/react-query/queryKeys';
+import {useGetProfile} from '@/lib/react-query/Admin/profile';
 
 const DropdownUser = () => {
   const {user, setToken} = useAuthContext();
@@ -13,6 +16,7 @@ const DropdownUser = () => {
   // console.log('Cateror Data:', caterorData);
 
   const {mutateAsync: logoutUser, isError} = useLogoutUser();
+  const {data: ProfileData} = useGetProfile(user?.id!);
 
   const handleSignOut = async () => {
     await logoutUser();
@@ -36,7 +40,7 @@ const DropdownUser = () => {
           <img
             src={
               // '/src/assets/images/logo/Menubook.png'
-              '/src/assets/images/logo/Menubook.png'
+              ProfileData?.data?.image
             }
             alt="User"
             className="h-full w-full"
@@ -64,7 +68,7 @@ const DropdownUser = () => {
           <ul className="flex flex-col gap-5 border-stroke px-2 py-2 dark:border-strokedark">
             <li>
               <Link
-                to="/users/profile"
+                to="/profile"
                 className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
               >
                 <svg

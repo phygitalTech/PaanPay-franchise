@@ -68,10 +68,10 @@ const CreateProductCategory = () => {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit, error)}
-        className="space-y-8 bg-white p-8 dark:bg-black"
+        className="space-y-8 bg-white p-6 dark:bg-boxdark"
       >
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-          <h1 className="text-xl font-bold">Add Product Category</h1>
+        <div className="mb-6 py-4">
+          <h1 className="text-lg font-semibold">Add Product Category</h1>
         </div>
         <GenericInputField
           name="name"

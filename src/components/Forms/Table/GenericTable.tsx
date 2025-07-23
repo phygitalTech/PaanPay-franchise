@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {FaEye, FaEyeSlash} from 'react-icons/fa6';
 import {FiCheck, FiEdit} from 'react-icons/fi';
 import {GrFormNext, GrFormPrevious} from 'react-icons/gr';
 import {MdDelete} from 'react-icons/md';
@@ -21,6 +22,7 @@ export type Column<T> = {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   onAccept?: (item: T) => void;
+  onView?: (item: T) => void;
   cell?: (props: {rowIndex: number}) => React.ReactNode;
 };
 
@@ -34,6 +36,7 @@ type GenericTableProps<T> = {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   onAccept?: (item: T) => void;
+  onView?: (item: T) => void;
   paginationOff?: boolean;
   className?: string;
 };
@@ -48,6 +51,7 @@ const GenericTable = <T,>({
   onEdit: handleEdit,
   onDelete: handleDelete,
   onAccept: handleAccept,
+  onView: handleView,
   paginationOff = false,
   className,
 }: GenericTableProps<T>) => {
@@ -209,6 +213,15 @@ const GenericTable = <T,>({
                           onClick={() => handleAccept(item)}
                         >
                           <FiCheck className="h-4 w-4" />
+                        </button>
+                      )}
+
+                      {handleView && (
+                        <button
+                          className="hover:bg-gray-100 rounded p-1.5 dark:hover:bg-meta-4"
+                          onClick={() => handleView(item)}
+                        >
+                          <FaEye className="h-4 w-4" />
                         </button>
                       )}
                       {handleEdit && (

@@ -1,5 +1,7 @@
+/* eslint-disable*/
+
 import {catererSchema} from '@/lib/validation/cartererSchema';
-import {FormProvider, useForm} from 'react-hook-form';
+import {FieldErrors, FormProvider, useForm} from 'react-hook-form';
 import {z} from 'zod';
 import GenericButton from '../Forms/Buttons/GenericButton';
 import GenericInputField from '../Forms/Input/GenericInputField';
@@ -9,8 +11,8 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useEffect, useState} from 'react';
 import {profileSchema} from '@/lib/validation/profileSchemas';
 import {useAuthContext} from '@/context/AuthContext';
-import {useGetCaterorById} from '@/lib/react-query/queriesAndMutations/cateror/dish';
-import {useUpdateCaterorProfile} from '@/lib/react-query/queriesAndMutations/cateror/caterorprofile';
+import {useGetProfile, useUpdateProfile} from '@/lib/react-query/Admin/profile';
+import toast from 'react-hot-toast';
 
 type FormValues = z.infer<typeof profileSchema>;
 
@@ -24,65 +26,60 @@ const Profile: React.FC = () => {
       fullname: '',
       phoneNumber: '',
       address: '',
-      state: '',
-      city: '',
       email: '',
-      username: '',
       password: '',
     },
   });
-  const {watch} = methods;
 
-  const watchFiles = watch('imageFile');
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const {data: profileData} = useGetProfile(user?.id!);
+  const {mutateAsync: updateProfile} = useUpdateProfile(user?.id!);
 
-  const [imageError, setImageError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const {mutate: updateCateror} = useUpdateCaterorProfile();
+  console.log('profile', profileData);
+  // const {data: profiledata} = useGetCaterorById(user?.caterorId || '');
 
-  const {data: profiledata} = useGetCaterorById(user?.caterorId || '');
-
-  console.log('Profile Data:', profiledata);
-
-  // Set default form values when profiledata is available
-  useEffect(() => {
-    if (profiledata) {
-      methods.reset({
-        fullname: profiledata?.data.user?.fullname || '',
-        phoneNumber: profiledata?.data.user?.phoneNumber || '',
-        address: profiledata?.data.address || '',
-        state: profiledata?.data?.state || '',
-        city: profiledata?.data.city || '',
-        email: profiledata?.data.user?.email || '',
-        username: profiledata?.data.user?.username || '',
-        // password: profiledata?.data.user?.password, // Keep password field empty for security
-      });
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      toast.success('Image selected successfully!');
     }
-  }, [profiledata, methods]);
+  };
+  useEffect(() => {
+    if (profileData) {
+      methods.reset({
+        fullname: profileData?.data?.user?.Fullname || '',
+        phoneNumber: profileData?.data.user?.phone || '',
+        address: profileData?.data.address || '',
+        email: profileData?.data.user?.email || '',
+
+        //  password: profileData?.data.user?.password,
+      });
+      setImagePreview(profileData?.data?.image);
+    }
+  }, [profileData, methods]);
 
   const onSubmit = (data: FormValues) => {
     console.log('Submitted Data', data);
-
-    const selectedFiles =
-      watchFiles instanceof FileList ? Array.from(watchFiles) : [];
-
-    updateCateror({
-      caterorId: user?.caterorId || '',
-      fullname: data.fullname,
-      phoneNumber: data.phoneNumber,
+    updateProfile({
+      phone: data.phoneNumber,
       email: data.email,
       address: data.address,
-      state: data.state,
-      city: data.city,
-      username: data.username,
       password: data.password,
-      imageFile: selectedFiles[0], // Ensure file is included if needed
+      imageFile: imageFile ?? undefined,
     });
+    setImagePreview(null);
   };
 
+  const error = (errors: FieldErrors) => {
+    console.log('form error', errors);
+  };
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit, error)}
         className="space-y-8 bg-white p-8 dark:bg-black"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12 md:gap-6">
@@ -95,6 +92,7 @@ const Profile: React.FC = () => {
               name="fullname"
               label="Full Name"
               placeholder="Enter your Full Name"
+              disabled
             />
           </div>
 
@@ -114,7 +112,7 @@ const Profile: React.FC = () => {
             />
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* <div className="col-span-12 md:col-span-6">
             <GenericSearchDropdown
               name="state"
               label="State"
@@ -152,15 +150,15 @@ const Profile: React.FC = () => {
               ]}
               defaultOption=""
             />
-          </div>
+          </div> */}
 
-          <div className="col-span-12 md:col-span-6">
+          {/* <div className="col-span-12 md:col-span-6">
             <GenericInputField
               name="city"
               label="City"
               placeholder="Enter your City"
             />
-          </div>
+          </div> */}
 
           <div className="col-span-12 md:col-span-6">
             <GenericInputField
@@ -170,7 +168,7 @@ const Profile: React.FC = () => {
               disabled
             />
           </div>
-
+          {/* 
           <div className="col-span-12 md:col-span-6">
             <GenericInputField
               name="username"
@@ -178,7 +176,7 @@ const Profile: React.FC = () => {
               placeholder="Enter your Username"
               disabled
             />
-          </div>
+          </div> */}
 
           <div className="col-span-12 md:col-span-6">
             <GenericInputField
@@ -189,7 +187,7 @@ const Profile: React.FC = () => {
             />
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          {/* <div className="col-span-12 md:col-span-6">
             <input
               type="file"
               {...methods.register('imageFile')}
@@ -207,6 +205,25 @@ const Profile: React.FC = () => {
                   className="h-auto max-h-48 w-full rounded-md object-cover"
                 />
               </div>
+            )}
+          </div> */}
+
+          <div className="col-span-6">
+            <label className="text-gray-700 mb-1 block text-sm font-medium">
+              Product category image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="dark:border-form-strokedark dark:bg-boxdark"
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 max-h-52 w-full rounded-lg object-cover dark:border-form-strokedark dark:bg-boxdark"
+              />
             )}
           </div>
         </div>

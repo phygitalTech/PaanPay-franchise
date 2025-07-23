@@ -6,9 +6,7 @@ export type Payload = {
 };
 export const addRawMaterialCategoryAPI = async (id: string, data: Payload) => {
   try {
-    console.log('id', id);
     const res = await api.post(`/admin/rawMaterialCategory/${id}`, data);
-
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -20,7 +18,7 @@ export const addRawMaterialCategoryAPI = async (id: string, data: Payload) => {
   }
 };
 
-export const getRawMaterialCategoryByIdAPI = async (id: string) => {
+export const getRawMaterialCategory = async (id: string) => {
   try {
     const res = await api.get(`/admin/rawMaterialCategory/${id}`);
     return res.data;

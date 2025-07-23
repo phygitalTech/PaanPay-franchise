@@ -63,7 +63,7 @@ const DisplayRawMaterialTable: React.FC = () => {
     })) || [];
 
   return (
-    <div className="mt-10">
+    <div className="mt-4">
       <GenericTable
         data={tableData}
         columns={columns}
