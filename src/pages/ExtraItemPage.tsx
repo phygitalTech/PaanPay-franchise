@@ -4,17 +4,11 @@ import React from 'react';
 
 const ExtraItemPage: React.FC = () => {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="grid grid-cols-1 gap-6">
-        {/* Form */}
-        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-black">
-          <ExtraItem />
-        </div>
-
-        {/* Table */}
-        <DisplayExtraItemTable />
-      </div>
-    </div>
+    <>
+      {' '}
+      <ExtraItem />
+      <DisplayExtraItemTable />
+    </>
   );
 };
 

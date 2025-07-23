@@ -81,11 +81,6 @@ const ProductList = () => {
 
   const columns: Column<Product>[] = [
     {
-      header: '#',
-      accessor: 'id',
-      render: (_row, index) => <span>{index + 1}</span>,
-    },
-    {
       header: 'Name',
       accessor: 'name',
     },

@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import {SidebarProps} from '@/types';
 import {Link, useLocation} from '@tanstack/react-router';
 import {useEffect, useRef, useState} from 'react';
@@ -11,10 +13,18 @@ import {
   FaCogs,
   FaFileAlt,
 } from 'react-icons/fa';
-import {MdCategory, MdProductionQuantityLimits} from 'react-icons/md';
-import {GiMaterialsScience, GiReceiveMoney} from 'react-icons/gi';
+import {
+  MdCategory,
+  MdFastfood,
+  MdProductionQuantityLimits,
+} from 'react-icons/md';
+import {
+  GiForkKnifeSpoon,
+  GiMaterialsScience,
+  GiReceiveMoney,
+} from 'react-icons/gi';
 import {RiCustomerService2Line} from 'react-icons/ri';
-import {HiOutlineUsers} from 'react-icons/hi';
+import {HiOutlinePuzzle, HiOutlineUsers} from 'react-icons/hi';
 import {BsBoxSeam} from 'react-icons/bs';
 import {BiPackage} from 'react-icons/bi';
 import {AiOutlineSetting} from 'react-icons/ai';
@@ -22,27 +32,19 @@ import {AiOutlineSetting} from 'react-icons/ai';
 import SidebarLinkGroup from './SidebarLinkGroup';
 
 import {useAuthContext} from '@/context/AuthContext';
+import {useGetProfile} from '@/lib/react-query/Admin/profile';
 
 const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
   const location = useLocation();
   const {pathname} = location;
-  const {role} = useAuthContext();
+  const {role, user} = useAuthContext();
+  const {data: ProfileData} = useGetProfile(user?.id!);
 
   const sidebarRoutes = [
     {
       label: 'Home',
-      path: '/reports',
+      path: '/',
       icon: <FaHome size={22} />,
-    },
-    {
-      label: 'Customer List',
-      path: '/customerlist',
-      icon: <RiCustomerService2Line size={22} />,
-    },
-    {
-      label: 'Merchant List',
-      path: '/merchantlist',
-      icon: <HiOutlineUsers size={22} />,
     },
     {
       label: 'Raw Material',
@@ -58,12 +60,12 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
           path: '/rawmaterial/rawmaterial',
           icon: <GiMaterialsScience size={22} />,
         },
-        {
-          label: 'Extra Items',
-          path: '/rawmaterial/extraitemraw',
-          icon: <BsBoxSeam size={22} />,
-        },
       ],
+    },
+    {
+      label: 'Extra Items',
+      path: '/rawmaterial/extraitemraw',
+      icon: <HiOutlinePuzzle size={22} />,
     },
     {
       label: 'Product Category',
@@ -80,22 +82,24 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
           icon: <BiPackage size={22} />,
         },
         {
-          label: 'Product',
+          label: 'Product List',
           path: '/productlist',
           icon: <MdProductionQuantityLimits size={22} />,
         },
       ],
+    },
+
+    {
+      label: 'Franchise product Request',
+      path: '/merchantinventorydetails',
+      icon: <GiReceiveMoney size={22} />,
     },
     {
       label: 'Purchase Request',
       path: '/request/purchaserequest',
       icon: <GiReceiveMoney size={22} />,
     },
-    {
-      label: 'Reports',
-      path: '/reports',
-      icon: <FaFileAlt size={22} />,
-    },
+
     {
       label: 'Setting',
       path: '/setting/setting',
@@ -200,11 +204,15 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
         >
           {sidebarOpen ? (
             <div className="flex items-center gap-2">
-              <img src={'Logo'} alt="Logo" className="h-18" />
+              <img src={ProfileData?.data?.image} alt="Logo" className="h-18" />
             </div>
           ) : (
             <div className="flex items-center rounded-full bg-white p-1">
-              <img src={'SmallLogo'} alt="Logo" className="h-10 w-10" />
+              <img
+                src={ProfileData?.data?.image}
+                alt="Logo"
+                className="h-10 w-10"
+              />
             </div>
           )}
         </button>

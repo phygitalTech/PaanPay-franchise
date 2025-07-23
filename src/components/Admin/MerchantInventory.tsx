@@ -7,7 +7,7 @@ import {useAuthContext} from '@/context/AuthContext';
 import {useGetMerchant} from '@/lib/react-query/Admin/customer';
 import GenericTable, {Column} from '@/components/Forms/Table/GenericTable';
 
-const MerchantList = () => {
+const MerchantInventory = () => {
   const navigate = useNavigate();
   const {user} = useAuthContext();
   const admin_id = user?.id;
@@ -19,6 +19,14 @@ const MerchantList = () => {
     {
       header: 'Merchant Name',
       accessor: (item) => item?.user?.Fullname,
+      render: (item) => (
+        <span
+          onClick={() => handleNavigate(item.id)}
+          className="cursor-pointer text-blue-500 hover:underline"
+        >
+          {item?.user?.Fullname}
+        </span>
+      ),
     },
     {
       header: 'Phone',
@@ -50,4 +58,4 @@ const MerchantList = () => {
   );
 };
 
-export default MerchantList;
+export default MerchantInventory;

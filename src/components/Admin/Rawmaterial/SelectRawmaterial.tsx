@@ -70,10 +70,10 @@ const SelectRawMaterial: React.FC = () => {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8 bg-white p-8 dark:bg-black"
+        className="space-y-8 bg-white p-6 dark:bg-boxdark"
       >
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-          <h1 className="text-xl font-bold">Raw Material</h1>
+        <div className="mb-6 py-4">
+          <h1 className="text-lg font-semibold">Raw Material</h1>
         </div>
 
         <div className="col-span-12 md:col-span-6">
@@ -116,9 +116,25 @@ const SelectRawMaterial: React.FC = () => {
 
         <div className="col-span-12 md:col-span-6">
           <GenericInputField
+            name="quantity"
+            label="Quantity"
+            placeholder="Enter quantity"
+          />
+        </div>
+
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
             name="price"
-            label="Price"
-            placeholder="Enter price"
+            label="Purchase Price"
+            placeholder="Enter purchase price"
+          />
+        </div>
+
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="selling Price"
+            label="Selling Price"
+            placeholder="Enter selling price"
           />
         </div>
 

@@ -15,6 +15,7 @@ import {
   useSubmitPurchaseRequest,
 } from '@/lib/react-query/Admin/Purchase/purchaseMutation';
 import {useAuthContext} from '@/context/AuthContext';
+import {MdDelete} from 'react-icons/md';
 
 type SubMerchantRow = {
   rawMaterialId: string;
@@ -138,24 +139,24 @@ const PurchaseAcceptPage: React.FC = () => {
     );
 
   return (
-    <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen dark:border-strokedark"
-      >
-        <div className="mx-auto max-w-6xl space-y-6 p-4 dark:border-strokedark">
+    <div className="rounded-sm border border-stroke bg-white px-4 pb-2 pt-4 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-6">
+      <FormProvider {...methods}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 dark:border-strokedark"
+        >
           {/* Back Button */}
           <button
             type="button"
             onClick={() => navigate({to: '/request/purchaserequest'})}
-            className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-green-700"
+            className="inline-flex items-center rounded-md py-2 text-sm font-medium text-neutral-500"
           >
             <BiArrowBack className="mr-2 h-5 w-5" />
             Back
           </button>
 
           {/* Page Title */}
-          <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
+          <div className="mb-6 rounded-md py-4 text-neutral-500">
             <h1 className="text-xl font-bold"> Purchase Request</h1>
           </div>
 
@@ -164,7 +165,7 @@ const PurchaseAcceptPage: React.FC = () => {
             {/* Add Row Button */}
             <GenericButton
               type="button"
-              className="bg-yellow-600 text-white hover:bg-yellow-700"
+              className="mb-4 bg-primary py-2 text-white"
               onClick={handleAddRow}
             >
               + Add Row
@@ -173,7 +174,7 @@ const PurchaseAcceptPage: React.FC = () => {
 
           {/* Table */}
           {/* Table Section with Matching Tailwind Style */}
-          <section className="rounded-md bg-white shadow dark:bg-boxdark">
+          <section className="rounded-md bg-white dark:bg-boxdark">
             <div className="overflow-x-auto rounded-md border border-stroke dark:border-strokedark">
               <table className="min-w-full text-sm">
                 <thead className="bg-gray-50 sticky top-0 z-10 bg-neutral-100 text-xs uppercase tracking-wider">
@@ -231,9 +232,9 @@ const PurchaseAcceptPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleRemoveRow(index)}
-                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                          className="hover:bg-gray-100 rounded p-1.5 dark:hover:bg-meta-4"
                         >
-                          <FaTrash className="h-5 w-5" />
+                          <MdDelete className="h-5 w-5" />
                         </button>
                       </td>
                     </tr>
@@ -246,14 +247,14 @@ const PurchaseAcceptPage: React.FC = () => {
             {/* Submit Button */}
             <GenericButton
               type="submit"
-              className="bg-green-600 text-white hover:bg-green-700"
+              className="bg-primary text-white hover:bg-green-700"
             >
               Submit
             </GenericButton>
           </div>
-        </div>
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+    </div>
   );
 };
 

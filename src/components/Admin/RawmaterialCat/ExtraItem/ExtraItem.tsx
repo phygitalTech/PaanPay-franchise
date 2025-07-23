@@ -46,10 +46,10 @@ const ExtraItem: React.FC = () => {
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8 bg-white p-8 dark:bg-black"
+        className="space-y-8 bg-white p-6 dark:bg-boxdark"
       >
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-          <h1 className="text-xl font-bold">Extra Item</h1>
+        <div className="mb-6 py-4">
+          <h1 className="text-lg font-semibold">Extra Item</h1>
         </div>
 
         {/* Row for name and price */}

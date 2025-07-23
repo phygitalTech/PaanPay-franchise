@@ -11,6 +11,12 @@ import {Controller, FormProvider, useForm} from 'react-hook-form';
 import GenericButton from '@/components/Forms/Buttons/GenericButton';
 import GenericTable, {Column} from '@/components/Forms/Table/GenericTable';
 import {useAuthContext} from '@/context/AuthContext';
+import GenericMultiselectDropdown from '@/components/Forms/SearchDropDown/GenericMultiselectDropdown';
+import {
+  useGetAllProduct,
+  useGetAllProductCategory,
+} from '@/lib/react-query/Admin/products';
+import {useGetRawMaterialCategory} from '@/lib/react-query/Admin/rawmaterial';
 
 type SubMerchantRow = {
   merchantId: string;
@@ -26,26 +32,53 @@ type FormValues = {
   quantityInput: Record<string, string>;
 };
 
+type MerchantInventory = {
+  id: string;
+  inventory: number;
+  rawMaterialId: string;
+  rawMaterialName: string;
+  unit: string;
+};
+
 const MerchantDetailed: React.FC = () => {
   const navigate = useNavigate();
   const {user} = useAuthContext();
   const {id} = useParams({from: '/_app/merchantdetail/$id'}) as {id: string};
 
   const {data, isLoading, isError, error} = useGetMerchantById(id);
+  const {data: rawCategory} = useGetRawMaterialCategory(user?.id!);
   const {mutateAsync: submitMerchantInventory, isPending} =
     useSubmitMerchantInventory();
   const [inputData, setInputData] = useState<SubMerchantRow[]>([]);
+  const [selectedRawMaterial, setSelectedRawMaterial] = useState<string[]>([]);
+  const [filteredRawData, setFilteredRawData] = useState<MerchantInventory[]>(
+    [],
+  );
+
+  console.log('selectedraw', selectedRawMaterial);
 
   const methods = useForm<FormValues>({
     defaultValues: {
       quantityInput: {},
     },
   });
+  let matchedMerchantData;
+  useEffect(() => {
+    if (data?.data && Array.isArray(data.data)) {
+      matchedMerchantData =
+        data.data.filter((raw: any) =>
+          selectedRawMaterial.includes(raw.rawMaterialId),
+        ) || [];
+
+      setFilteredRawData(matchedMerchantData);
+      console.log('filtered', filteredRawData);
+    }
+  }, [selectedRawMaterial, data]);
 
   useEffect(() => {
-    if (Array.isArray(data?.data)) {
-      const rows: SubMerchantRow[] = data.data.map((item: any) => ({
-        merchantId: item._id,
+    if (Array.isArray(filteredRawData)) {
+      const rows: SubMerchantRow[] = filteredRawData.map((item: any) => ({
+        merchantId: item.id,
         inventory: item.inventory ?? '',
         rawMaterialName: item.rawMaterialName ?? '',
         rawMaterialId: item.rawMaterialId ?? '',
@@ -66,7 +99,7 @@ const MerchantDetailed: React.FC = () => {
 
       setInputData(rows);
     }
-  }, [data]);
+  }, [filteredRawData]);
 
   const handleSubmit = (formValues: FormValues) => {
     const updatedInputData = inputData.map((row) => {
@@ -151,40 +184,57 @@ const MerchantDetailed: React.FC = () => {
   }
 
   return (
-    <FormProvider {...methods}>
-      <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
-        <div className="mx-auto">
-          <div className="flex items-center">
-            <button
-              onClick={() => navigate({to: '/merchantlist'})}
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-lg font-semibold text-graydark transition-colors duration-200 dark:text-white"
-            >
-              <BiArrowBack className="text-lg text-graydark dark:text-white" />
-              Merchant List
-            </button>
-          </div>
+    <div className="rounded-sm px-4 pb-2 pt-4 dark:bg-boxdark sm:px-6">
+      <FormProvider {...methods}>
+        <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
+          <div className="mx-auto">
+            <h1 className="mb-4 text-xl font-semibold sm:text-2xl">
+              Merchant Inventory Details
+            </h1>
+            <div className="mb-4 bg-white p-4 dark:bg-boxdark">
+              <h1 className="mb-4 text-lg font-semibold">Raw Material</h1>
+              {rawCategory?.map((each: any) => {
+                const categoryRawOptions =
+                  each?.rawMaterial?.map((pro: any) => ({
+                    value: pro.id,
+                    label: pro.name,
+                  })) || [];
 
-          <h1 className="text-gray-900 mb-4 text-xl font-bold dark:text-white sm:text-2xl">
-            Merchant Inventory Details
-          </h1>
+                return (
+                  <GenericMultiselectDropdown
+                    key={each.id}
+                    name={`productCategory_${each.id}`} // unique name for each
+                    label={each?.name}
+                    options={categoryRawOptions}
+                    onChange={(selected: any) => {
+                      setSelectedRawMaterial((prev) => {
+                        const combined = [...new Set([...prev, ...selected])]; // just use selected as is
+                        return combined;
+                      });
+                    }}
+                  />
+                );
+              })}
+            </div>
 
-          {/* Generic Table */}
-          <GenericTable data={inputData} columns={columns} paginationOff />
+            {/* Generic Table */}
+            <GenericTable data={inputData} columns={columns} paginationOff />
 
-          {/* Submit Button */}
-          <div className="mt-6 flex justify-end">
-            <GenericButton
-              type="button"
-              onClick={methods.handleSubmit(handleSubmit)}
-              className="rounded-md bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
-              disabled={isPending}
-            >
-              {isPending ? 'Submitting...' : 'Submit'}
-            </GenericButton>
+            {/* Submit Button */}
+            <div className="mt-6 flex justify-end">
+              <GenericButton
+                type="button"
+                onClick={methods.handleSubmit(handleSubmit)}
+                className="rounded-md bg-emerald-800 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
+                disabled={isPending}
+              >
+                {isPending ? 'Submitting...' : 'Submit'}
+              </GenericButton>
+            </div>
           </div>
         </div>
-      </div>
-    </FormProvider>
+      </FormProvider>
+    </div>
   );
 };
 
