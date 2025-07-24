@@ -14,10 +14,12 @@ import GenericSearchDropdown from '@/components/Forms/SearchDropDown/GenericSear
 import GenericButton from '@/components/Forms/Buttons/GenericButton';
 import {
   useGetRawMaterialById,
-  useUpdateRawdata,
+  useUpdateRawMaterial,
 } from '@/lib/react-query/Admin/updaterawmaterial';
-import {useGetCategoryData} from '@/lib/react-query/Admin/rawmaterial';
+
 import {useNavigate} from '@tanstack/react-router';
+import {useAuthContext} from '@/context/AuthContext';
+import {useGetRawMaterialCategory} from '@/lib/react-query/Admin/rawmaterial';
 
 type FormValues = z.infer<typeof rawMaterialValidationSchema>;
 
@@ -29,9 +31,14 @@ const Updaterawmaterial = () => {
     resolver: zodResolver(rawMaterialValidationSchema),
   });
 
+  const {user} = useAuthContext();
   const {data, isLoading} = useGetRawMaterialById(id);
-  const {mutate: updateRawMaterial, isPending} = useUpdateRawdata();
-  const {data: categories} = useGetCategoryData();
+  const {
+    mutateAsync: updateRawMaterial,
+    isSuccess,
+    isPending,
+  } = useUpdateRawMaterial();
+  const {data: categories} = useGetRawMaterialCategory(user?.id!);
 
   useEffect(() => {
     if (data) {
@@ -39,20 +46,33 @@ const Updaterawmaterial = () => {
         name: data.name,
         unit: data.unit,
         price: data.price,
+        inventory: data.inventory,
+        sellPrice: data.sellPrice,
         rawMaterialCategory: data.rawMaterialCategoryId,
       });
     }
   }, [data, methods]);
+
+  const errors = (error: any) => {
+    console.log('form error', error);
+  };
 
   const onSubmit = (formData: FormValues) => {
     const payload = {
       name: formData.name,
       unit: formData.unit,
       price: Number(formData.price),
+      inventory: Number(formData.inventory),
+      sellPrice: Number(formData.sellPrice),
       rawMaterialCategoryId: formData.rawMaterialCategory,
     };
 
-    updateRawMaterial({id, data: payload});
+    updateRawMaterial(
+      {id, data: payload},
+      {
+        onSuccess: () => navigate({to: '/rawmaterial/rawmaterial'}),
+      },
+    );
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -60,11 +80,11 @@ const Updaterawmaterial = () => {
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8 bg-white p-8 dark:bg-black"
+        onSubmit={methods.handleSubmit(onSubmit, errors)}
+        className="space-y-8 bg-white p-8 dark:bg-boxdark"
       >
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-          <h1 className="text-xl font-bold">Update Raw Material</h1>
+        <div className="mb-6 py-4">
+          <h1 className="text-lg font-semibold">Update Raw Material</h1>
         </div>
 
         <GenericInputField name="name" label="Name" placeholder="Enter name" />
@@ -73,12 +93,15 @@ const Updaterawmaterial = () => {
           name="unit"
           label="Unit"
           options={[
-            {label: 'kg', value: 'KILOGRAM'},
-            {label: 'bottle', value: 'BOTTLE'},
+            {label: 'kg', value: 'KG'},
             {label: 'gm', value: 'GRAM'},
+            {label: 'ml', value: 'ML'},
+            {label: 'bottle', value: 'BOTTLE'},
             {label: 'ltr', value: 'LITRE'},
             {label: 'pcs', value: 'PIECE'},
             {label: 'meter', value: 'METER'},
+            {label: 'dozen', value: 'DOZEN'},
+            {label: 'none', value: 'NONE'},
           ]}
         />
 
@@ -93,11 +116,29 @@ const Updaterawmaterial = () => {
           }
         />
 
-        <GenericInputField
-          name="price"
-          label="Price"
-          placeholder="Enter price"
-        />
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="inventory"
+            label="Inventory"
+            placeholder="Enter inventory"
+          />
+        </div>
+
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="price"
+            label="Purchase Price"
+            placeholder="Enter purchase price"
+          />
+        </div>
+
+        <div className="col-span-12 md:col-span-6">
+          <GenericInputField
+            name="sellPrice"
+            label="Selling Price"
+            placeholder="Enter selling price"
+          />
+        </div>
 
         {/* Form Buttons */}
         <div className="flex justify-end space-x-4">

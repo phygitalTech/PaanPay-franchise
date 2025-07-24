@@ -1,12 +1,22 @@
-import {getMerchantId} from '@/lib/api/Admin/merchantdetail';
+import {
+  getMerchantById,
+  getMerchantPurchaseId,
+} from '@/lib/api/Admin/merchantdetail';
 import {api} from '@/utils/axios';
 import {useMutation, useQuery, QueryClient} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
+export const useGetMerchantPurchaseById = (id: string) =>
+  useQuery({
+    queryKey: ['merchant', id],
+    queryFn: () => getMerchantPurchaseId(id),
+    enabled: !!id,
+  });
+
 export const useGetMerchantById = (id: string) =>
   useQuery({
     queryKey: ['merchant', id],
-    queryFn: () => getMerchantId(id),
+    queryFn: () => getMerchantById(id),
     enabled: !!id,
   });
 
@@ -22,6 +32,7 @@ interface MerchantInventoryPayload {
   adminId: string;
   merchantId: string;
   items: InventoryItem[];
+  totalBillAmount: number;
 }
 
 export const useSubmitMerchantInventory = () => {

@@ -21,7 +21,7 @@ export const useUpdateExtraItem = () => {
     onSuccess: () => {
       toast.success('Extra item updated successfully!');
       queryClient.invalidateQueries({
-        queryKey: ['extra-itemssss'],
+        queryKey: ['extra-item'],
       });
     },
     onError: (error) => {

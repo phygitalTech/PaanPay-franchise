@@ -5,6 +5,7 @@ import {BiArrowBack} from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import {
   useGetMerchantById,
+  useGetMerchantPurchaseById,
   useSubmitMerchantInventory,
 } from '@/lib/react-query/Admin/merchant';
 import {Controller, FormProvider, useForm} from 'react-hook-form';
@@ -21,6 +22,8 @@ import {useGetRawMaterialCategory} from '@/lib/react-query/Admin/rawmaterial';
 type SubMerchantRow = {
   merchantId: string;
   inventory: string | number;
+  adminInventory: number;
+  sellPrice: number;
   rawMaterialName: string;
   rawMaterialId?: string;
   quantity: number;
@@ -35,6 +38,8 @@ type FormValues = {
 type MerchantInventory = {
   id: string;
   inventory: number;
+  adminInventory: number;
+  sellPrice: number;
   rawMaterialId: string;
   rawMaterialName: string;
   unit: string;
@@ -45,7 +50,7 @@ const MerchantDetailed: React.FC = () => {
   const {user} = useAuthContext();
   const {id} = useParams({from: '/_app/merchantdetail/$id'}) as {id: string};
 
-  const {data, isLoading, isError, error} = useGetMerchantById(id);
+  const {data, isLoading, isError, error} = useGetMerchantPurchaseById(id);
   const {data: rawCategory} = useGetRawMaterialCategory(user?.id!);
   const {mutateAsync: submitMerchantInventory, isPending} =
     useSubmitMerchantInventory();
@@ -54,6 +59,8 @@ const MerchantDetailed: React.FC = () => {
   const [filteredRawData, setFilteredRawData] = useState<MerchantInventory[]>(
     [],
   );
+
+  console.log('merchant inventory', data);
 
   console.log('selectedraw', selectedRawMaterial);
 
@@ -80,6 +87,8 @@ const MerchantDetailed: React.FC = () => {
       const rows: SubMerchantRow[] = filteredRawData.map((item: any) => ({
         merchantId: item.id,
         inventory: item.inventory ?? '',
+        adminInventory: item.adminInventory ?? 0,
+        sellPrice: item.sellPrice,
         rawMaterialName: item.rawMaterialName ?? '',
         rawMaterialId: item.rawMaterialId ?? '',
         unit: item.unit ?? '',
@@ -119,15 +128,35 @@ const MerchantDetailed: React.FC = () => {
         inventory: item.inventory.toString(),
         rawMaterialId: item.rawMaterialId?.toString() ?? '',
         rawMaterialName: item.rawMaterialName,
+        sellPrice: item.sellPrice,
         unit: item.unit,
         quantity: item.quantity,
       }));
 
-    submitMerchantInventory({
-      adminId: user?.id!,
-      items: filteredItems,
-      merchantId: id!,
+    console.log('filterrrrrr', filteredItems);
+
+    const totalBillAmt = filteredItems.reduce((total, item) => {
+      const rate = item.sellPrice;
+      return total + item.quantity * rate;
+    }, 0);
+    const adminId = user?.id!;
+
+    const merchantId = id!;
+    navigate({
+      to: '/merchantbill',
+      state: {
+        adminId,
+        merchantId,
+        totalBillAmt,
+        RawMaterialArray: filteredItems,
+      },
     });
+
+    // submitMerchantInventory({
+    //   adminId: user?.id!,
+    //   items: filteredItems,
+    //   merchantId: id!,
+    // });
   };
 
   const columns: Column<SubMerchantRow>[] = [
@@ -139,8 +168,17 @@ const MerchantDetailed: React.FC = () => {
       header: 'Unit',
       accessor: 'unit',
     },
+
     {
-      header: 'Inventory',
+      header: 'Available Stock',
+      accessor: 'adminInventory',
+    },
+    {
+      header: 'price (one item)',
+      accessor: 'sellPrice',
+    },
+    {
+      header: 'Merchant Inventory',
       accessor: 'inventory',
     },
     {
@@ -203,13 +241,16 @@ const MerchantDetailed: React.FC = () => {
                 return (
                   <GenericMultiselectDropdown
                     key={each.id}
-                    name={`productCategory_${each.id}`} // unique name for each
+                    name={`productCategory_${each.id}`}
                     label={each?.name}
                     options={categoryRawOptions}
-                    onChange={(selected: any) => {
+                    onChange={(selected: string[]) => {
                       setSelectedRawMaterial((prev) => {
-                        const combined = [...new Set([...prev, ...selected])]; // just use selected as is
-                        return combined;
+                        const otherSelected = prev.filter(
+                          (id) =>
+                            !each.rawMaterial.some((pro: any) => pro.id === id),
+                        );
+                        return [...new Set([...otherSelected, ...selected])];
                       });
                     }}
                   />
@@ -228,7 +269,7 @@ const MerchantDetailed: React.FC = () => {
                 className="rounded-md bg-emerald-800 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-green-700 disabled:opacity-50 dark:bg-green-700 dark:hover:bg-green-600"
                 disabled={isPending}
               >
-                {isPending ? 'Submitting...' : 'Submit'}
+                Bill
               </GenericButton>
             </div>
           </div>

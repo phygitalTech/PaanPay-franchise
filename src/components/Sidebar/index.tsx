@@ -99,6 +99,11 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
       path: '/request/purchaserequest',
       icon: <GiReceiveMoney size={22} />,
     },
+    {
+      label: 'Problem Request',
+      path: '/helpdesk',
+      icon: <GiReceiveMoney size={22} />,
+    },
 
     {
       label: 'Setting',

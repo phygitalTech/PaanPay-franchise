@@ -1,4 +1,5 @@
 import {
+  getProblemRequest,
   getProfile,
   profilePayload,
   updateProfile,
@@ -10,6 +11,13 @@ export const useGetProfile = (id: string) =>
   useQuery({
     queryKey: ['profile'],
     queryFn: () => getProfile(id),
+    enabled: !!id,
+  });
+
+export const useGetProblemRequest = (id: string) =>
+  useQuery({
+    queryKey: ['problem'],
+    queryFn: () => getProblemRequest(id),
     enabled: !!id,
   });
 

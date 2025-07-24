@@ -51,3 +51,17 @@ export const updateProfile = async (id: string, data: profilePayload) => {
     throw error;
   }
 };
+
+export const getProblemRequest = async (id: string) => {
+  try {
+    const res = await api.get(`/admin/help/${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch problem request',
+      );
+    }
+    throw error;
+  }
+};

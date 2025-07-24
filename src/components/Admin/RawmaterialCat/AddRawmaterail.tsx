@@ -21,24 +21,23 @@ const AddRawMaterial: React.FC = () => {
     resolver: zodResolver(rawmaterialcategorySchema),
     defaultValues: {name: ''},
   });
-  const {mutate: addCategory, isPending: pendingAdd} =
-    useAddRawMaterialCategory(admin_id!);
+  const {mutate: addCategory, isPending} = useAddRawMaterialCategory(admin_id!);
   const {data: categoriesData, isError: errorCategories} =
-    useGetRawMaterialCategory('');
+    useGetRawMaterialCategory(admin_id!);
   console.log('dataaaaaaa', categoriesData);
 
   const onSubmit = (data: FormValues) => {
     addCategory(data);
-    console.log('data', data);
+    methods.reset();
   };
   return (
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8 bg-white p-8 dark:bg-black"
+        className="space-y-8 bg-white p-8 dark:bg-boxdark"
       >
-        <div className="mb-6 rounded-md bg-emerald-600 px-6 py-4 text-white shadow">
-          <h1 className="text-xl font-bold">Add Raw Material Category</h1>
+        <div className="mb-6 py-4">
+          <h1 className="text-lg font-semibold">Add Raw Material Category</h1>
         </div>
         <GenericInputField
           name="name"
@@ -47,7 +46,7 @@ const AddRawMaterial: React.FC = () => {
         />
         <div className="flex justify-end">
           <GenericButton type="submit">
-            {pendingAdd ? 'Saving...' : 'Save'}
+            {isPending ? 'saving...' : 'save'}
           </GenericButton>
         </div>
       </form>

@@ -1,30 +1,31 @@
 import {api} from '@/utils/axios';
 import {AxiosError} from 'axios';
 
+export type RawMaterial = {
+  name: string;
+  price: number;
+  unit: string;
+  inventory: number;
+  sellPrice: number;
+  rawMaterialCategoryId: string;
+};
+
 export const getRawMaterialById = async (id: string) => {
   const res = await api.get(`/admin/rawMaterial/single/${id}`);
   return res.data;
 };
 
-export const updateRawMaterialAdmin = async ({
-  id,
-  data,
-}: {
-  id: string;
-  data: {
-    name: string;
-    rawMaterialCategoryId: string;
-  };
-}) => {
+export const updateRawMaterial = async (
+  categoryId: string,
+  data: RawMaterial,
+) => {
   try {
-    const response = await api.put(`/admin/rawMaterial/${id}`, data);
+    console.log('edit data', data);
+    const response = await api.put(`/admin/rawMaterial/${categoryId}`, data);
     return response.data;
   } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to update raw material',
-      );
-    }
+    console.error('Error to save raw material :', error);
+    throw error;
   }
 };
 
