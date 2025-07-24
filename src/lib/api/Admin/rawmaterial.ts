@@ -18,20 +18,6 @@ export const addRawMaterialCategoryAPI = async (id: string, data: Payload) => {
   }
 };
 
-export const getRawMaterialCategory = async (id: string) => {
-  try {
-    const res = await api.get(`/admin/rawMaterialCategory/${id}`);
-    return res.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch category',
-      );
-    }
-    throw error;
-  }
-};
-
 export const deleteRawMaterialCategoryAPI = async (id: string) => {
   try {
     const res = await api.delete(`/admin/rawMaterialCategory/${id}`);
@@ -65,6 +51,20 @@ export const addRawMaterial = async (
   }
 };
 
+export const getRawMaterialCategory = async (id: string) => {
+  try {
+    const res = await api.get(`/admin/rawMaterialCategory/${id}`);
+    return res.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch category',
+      );
+    }
+    throw error;
+  }
+};
+
 export const fetchCategories = async (id: string) => {
   const response = await api.get(`/admin/rawMaterialCategory/${id}`);
   // console.log('response dataaaa', response.data);
@@ -88,7 +88,7 @@ export const getAllrawmaterial = async (id: string) => {
 
 export const deleteRawMaterialAdmin = async (id: string) => {
   try {
-    const response = await api.put(`/admin/rawMaterial/${id}`);
+    const response = await api.delete(`/admin/rawMaterial/${id}`);
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

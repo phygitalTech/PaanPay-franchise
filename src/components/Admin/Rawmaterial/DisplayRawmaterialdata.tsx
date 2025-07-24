@@ -15,6 +15,7 @@ type RawMaterial = {
   id: string;
   name: string;
   unit: string;
+  inventory: number;
   price: number;
   rawMaterialCategoryId: string;
   categoryName: string;
@@ -49,6 +50,7 @@ const DisplayRawMaterialTable: React.FC = () => {
     {header: 'Name', accessor: 'name', sortable: true},
     {header: 'Category', accessor: 'categoryName', sortable: true},
     {header: 'Unit', accessor: 'unit'},
+    {header: 'Inventory', accessor: 'inventory'},
     {header: 'Price', accessor: 'price'},
   ];
 
@@ -58,6 +60,7 @@ const DisplayRawMaterialTable: React.FC = () => {
       name: item.name,
       unit: item.unit,
       price: item.price,
+      inventory: item.inventory,
       rawMaterialCategoryId: item.rawMaterialCategoryId,
       categoryName: item.rawMaterialCategory?.name || '',
     })) || [];

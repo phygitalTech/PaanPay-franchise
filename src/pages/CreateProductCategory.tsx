@@ -99,7 +99,7 @@ const CreateProductCategory = () => {
             <img
               src={imagePreview}
               alt="Preview"
-              className="mt-2 max-h-52 w-full rounded-lg object-cover dark:border-form-strokedark dark:bg-boxdark"
+              className="mt-2 max-h-52 w-full rounded-full object-cover dark:border-form-strokedark dark:bg-boxdark"
             />
           )}
         </div>

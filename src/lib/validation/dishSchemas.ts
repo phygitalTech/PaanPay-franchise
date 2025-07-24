@@ -10,12 +10,30 @@ const rawMaterialCategoryValidationSchema = z.object({
 
 const rawMaterialValidationSchema = z.object({
   name: z.string().min(1, 'Raw material name is required').max(100),
-  unit: z.enum(['BOTTLE', 'GRAM', 'KILOGRAM', 'LITRE', 'PIECE', 'METER']),
+  unit: z.enum([
+    'BOTTLE',
+    'GRAM',
+    'KG',
+    'LITRE',
+    'PIECE',
+    'METER',
+    'DOZEN',
+    'ML',
+    'NONE',
+  ]),
   price: z.preprocess(
     (val) => Number(val),
     z.number().positive({message: 'Price must be a positive number'}),
   ),
+  inventory: z.preprocess(
+    (val) => Number(val),
+    z.number().positive({message: 'Price must be a positive number'}),
+  ),
   rawMaterialCategory: z.string().min(1, 'Raw material category is required'),
+  sellPrice: z.preprocess(
+    (val) => Number(val),
+    z.number().positive({message: 'Price must be a positive number'}),
+  ),
 });
 
 const updaterawMaterialValidationSchema = z.object({

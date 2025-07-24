@@ -12,7 +12,7 @@ import {
   fetchExtraItemById,
   fetchExtraItemsData,
   getAllrawmaterial,
-  getRawMaterialCategoryByIdAPI,
+  getRawMaterialCategory,
   Payload,
 } from '@/lib/api/Admin/rawmaterial';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
@@ -21,12 +21,12 @@ import {} from './../../api/Admin/rawmaterial';
 
 export const useAddRawMaterialCategory = (id: string) => {
   const queryClient = useQueryClient();
-  const {mutate, isError, error} = useMutation({
+  const {mutate, isError, error, isPending} = useMutation({
     mutationFn: (data: Payload) => addRawMaterialCategoryAPI(id, data),
     onSuccess: () => {
       toast.success('Category added!');
       queryClient.invalidateQueries({
-        queryKey: ['RAW_MATERIAL_CATEGORIES'],
+        queryKey: ['raw_cat'],
       });
     },
     onError: (error) => {
@@ -34,15 +34,22 @@ export const useAddRawMaterialCategory = (id: string) => {
     },
   });
 
-  return {mutate, isError, error};
+  return {mutate, isError, error, isPending};
 };
 
 export const useGetRawMaterialCategory = (id: string) => {
   return useQuery({
-    queryKey: ['RAW_MATERIAL_CATEGORIES'],
-    queryFn: () => getRawMaterialCategoryByIdAPI(id),
+    queryKey: ['raw_cat'],
+    queryFn: () => getRawMaterialCategory(id),
   });
 };
+
+// export const useGetCategoryData = (id: string) => {
+//   return useQuery({
+//     queryKey: ['rawMaterialCategories'],
+//     queryFn: () => fetchCategories(id),
+//   });
+// };
 
 export const useDeleteRawMaterialCategory = () => {
   const queryClient = useQueryClient();
@@ -51,7 +58,7 @@ export const useDeleteRawMaterialCategory = () => {
     onSuccess: () => {
       toast.success('Category deleted!');
       queryClient.invalidateQueries({
-        queryKey: ['RAW_MATERIAL_CATEGORIES'],
+        queryKey: ['raw_cat'],
       });
     },
     onError: (error: any) => {
@@ -73,7 +80,7 @@ export const useAddRawMaterialAdmin = (id: string) => {
     onSuccess: () => {
       toast.success('Raw material saved successfully!');
       queryClient.invalidateQueries({
-        queryKey: ['rawMaterialList'],
+        queryKey: ['rawMaterial'],
       });
     },
     onError: (error) => {
@@ -83,16 +90,9 @@ export const useAddRawMaterialAdmin = (id: string) => {
   });
 };
 
-export const useGetCategoryData = (id: string) => {
-  return useQuery({
-    queryKey: ['rawMaterialCategories'],
-    queryFn: () => fetchCategories(id),
-  });
-};
-
 export const useGetAllRawMaterials = (id: string) => {
   return useQuery({
-    queryKey: ['rawMaterialList'],
+    queryKey: ['rawMaterial'],
     queryFn: () => getAllrawmaterial(id),
   });
 };
@@ -104,7 +104,7 @@ export const useDeleteRawMaterialAdmin = () => {
     onSuccess: () => {
       toast.success('Raw material deleted successfully!');
       queryClient.invalidateQueries({
-        queryKey: ['rawMaterialList'],
+        queryKey: ['rawMaterial'],
       });
     },
   });
@@ -128,13 +128,14 @@ export const useAddExtraItem = (id: string) => {
 
 export const useGetExtraItemsDataByid = (id: string) => {
   return useQuery({
-    queryKey: ['extra-item', id],
+    queryKey: ['extra-item'],
     queryFn: () => fetchExtraItemById(id),
   });
 };
+
 export const useGetExtraItemsData = (id: string) => {
   return useQuery({
-    queryKey: ['extra-item'],
+    queryKey: ['extra-item', id],
     queryFn: () => fetchExtraItemsData(id),
   });
 };
@@ -146,7 +147,7 @@ export const useDeleteExtraItem = () => {
     onSuccess: () => {
       toast.success('Extra item deleted successfully!');
       queryClient.invalidateQueries({
-        queryKey: ['extra-itemssss'],
+        queryKey: ['extra-item'],
       });
     },
   });

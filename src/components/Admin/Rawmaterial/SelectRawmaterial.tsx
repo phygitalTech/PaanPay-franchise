@@ -13,7 +13,7 @@ import {rawMaterialValidationSchema} from '@/lib/validation/dishSchemas';
 import {toast} from 'react-hot-toast';
 import {
   useAddRawMaterialAdmin,
-  useGetCategoryData,
+  useGetRawMaterialCategory,
 } from '@/lib/react-query/Admin/rawmaterial';
 import {addRawMaterial} from '@/lib/api/Admin/rawmaterial';
 import {useAuthContext} from '@/context/AuthContext';
@@ -26,7 +26,9 @@ export type Category = {
 export type RawMaterialFormValues = {
   name: string;
   unit: string;
-  price: string;
+  price: number;
+  inventory: number;
+  sellPrice: number;
   rawMaterialCategory: string;
 };
 
@@ -38,7 +40,9 @@ const SelectRawMaterial: React.FC = () => {
     defaultValues: {
       name: '',
       unit: '',
-      price: '',
+      price: 0,
+      inventory: 0,
+      sellPrice: 0,
       rawMaterialCategory: '',
     },
   });
@@ -48,18 +52,29 @@ const SelectRawMaterial: React.FC = () => {
   );
   console.log('first');
 
-  const {data: categoriesData, isError, error} = useGetCategoryData(adminId!);
+  const {
+    data: categoriesData,
+    isError,
+    error,
+  } = useGetRawMaterialCategory(adminId!);
+
+  const errors = (error: any) => {
+    console.log('form error', error);
+  };
 
   const onSubmit = async (data: RawMaterialFormValues) => {
     const payload = {
       name: data.name,
       price: Number(data.price),
       unit: data.unit,
+      inventory: Number(data.inventory),
+      sellPrice: Number(data.sellPrice),
       rawMaterialCategoryId: data.rawMaterialCategory,
     };
 
     try {
       const res = await addRawMaterialAdmin(payload);
+      methods.reset();
       console.log('res', res);
     } catch (error) {
       console.error('Direct call failed:', error);
@@ -69,7 +84,7 @@ const SelectRawMaterial: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={methods.handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit, errors)}
         className="space-y-8 bg-white p-6 dark:bg-boxdark"
       >
         <div className="mb-6 py-4">
@@ -103,11 +118,12 @@ const SelectRawMaterial: React.FC = () => {
             label="Unit"
             options={[
               {label: 'kg', value: 'KG'},
-              {label: 'bottle', value: 'BOTTLE'},
               {label: 'gm', value: 'GRAM'},
+              {label: 'ml', value: 'ML'},
+              {label: 'bottle', value: 'BOTTLE'},
               {label: 'ltr', value: 'LITRE'},
-              {label: 'mili ltr', value: 'ML'},
               {label: 'pcs', value: 'PIECE'},
+              {label: 'meter', value: 'METER'},
               {label: 'dozen', value: 'DOZEN'},
               {label: 'none', value: 'NONE'},
             ]}
@@ -116,9 +132,9 @@ const SelectRawMaterial: React.FC = () => {
 
         <div className="col-span-12 md:col-span-6">
           <GenericInputField
-            name="quantity"
-            label="Quantity"
-            placeholder="Enter quantity"
+            name="inventory"
+            label="Inventory"
+            placeholder="Enter inventory"
           />
         </div>
 
@@ -132,7 +148,7 @@ const SelectRawMaterial: React.FC = () => {
 
         <div className="col-span-12 md:col-span-6">
           <GenericInputField
-            name="selling Price"
+            name="sellPrice"
             label="Selling Price"
             placeholder="Enter selling price"
           />

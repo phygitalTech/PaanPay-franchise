@@ -27,6 +27,8 @@ const DisplayAddRawMaterial: React.FC = () => {
     error,
   } = useGetRawMaterialCategory(admin_id!);
 
+  console.log('cattt', categoryData);
+
   const {mutate: deleteCategory} = useDeleteRawMaterialCategory();
 
   const handleDelete = (item: RawMaterialCategory) => {
@@ -51,7 +53,7 @@ const DisplayAddRawMaterial: React.FC = () => {
   //   return <div>Error: {error?.message || 'Failed to load categories'}</div>;
 
   return (
-    <div className="p-4">
+    <div className="mt-4">
       <GenericTable
         data={categoryData || []}
         columns={columns}

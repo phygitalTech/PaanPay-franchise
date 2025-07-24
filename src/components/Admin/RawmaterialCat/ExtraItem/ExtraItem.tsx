@@ -24,7 +24,7 @@ const ExtraItem: React.FC = () => {
     },
   });
 
-  const {mutate: addItem} = useAddExtraItem(adminId!);
+  const {mutate: addItem, isPending} = useAddExtraItem(adminId!);
   // console.log('Added Extra Itemsss:', addItem);
   const {
     data: extraItemsData,
@@ -72,7 +72,9 @@ const ExtraItem: React.FC = () => {
         </div>
 
         <div className="flex justify-end">
-          <GenericButton type="submit">Save</GenericButton>
+          <GenericButton type="submit">
+            {isPending ? 'Saving...' : 'Save'}
+          </GenericButton>
         </div>
       </form>
     </FormProvider>
