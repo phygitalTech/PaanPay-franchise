@@ -26,7 +26,7 @@ import {
 import {RiCustomerService2Line} from 'react-icons/ri';
 import {HiOutlinePuzzle, HiOutlineUsers} from 'react-icons/hi';
 import {BsBoxSeam} from 'react-icons/bs';
-import {BiPackage} from 'react-icons/bi';
+import {BiPackage, BiSend} from 'react-icons/bi';
 import {AiOutlineSetting} from 'react-icons/ai';
 
 import SidebarLinkGroup from './SidebarLinkGroup';
@@ -92,7 +92,7 @@ const Sidebar = ({sidebarOpen, setSidebarOpen}: SidebarProps) => {
     {
       label: 'Franchise product Request',
       path: '/merchantinventorydetails',
-      icon: <GiReceiveMoney size={22} />,
+      icon: <BiSend size={22} />,
     },
     {
       label: 'Purchase Request',

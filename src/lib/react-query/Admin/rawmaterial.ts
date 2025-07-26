@@ -10,7 +10,6 @@ import {
   deleteRawMaterialCategoryAPI,
   fetchCategories,
   fetchExtraItemById,
-  fetchExtraItemsData,
   getAllrawmaterial,
   getRawMaterialCategory,
   Payload,
@@ -18,6 +17,7 @@ import {
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {} from './../../api/Admin/rawmaterial';
+import {getAllExtraItems} from '@/lib/api/Admin/products';
 
 export const useAddRawMaterialCategory = (id: string) => {
   const queryClient = useQueryClient();
@@ -136,7 +136,7 @@ export const useGetExtraItemsDataByid = (id: string) => {
 export const useGetExtraItemsData = (id: string) => {
   return useQuery({
     queryKey: ['extra-item', id],
-    queryFn: () => fetchExtraItemsData(id),
+    queryFn: () => getAllExtraItems(id),
   });
 };
 

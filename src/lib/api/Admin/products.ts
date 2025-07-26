@@ -7,13 +7,13 @@ export type ProductPayload = {
     name: string;
     description: string;
     categoryId: string;
-    self: number;
-    level1: number;
-    level2: number;
     imageFile?: File;
     size: {
       name: string;
       price: number;
+      self: number;
+      level1: number;
+      level2: number;
       extraItems: {
         extraItemsId: string;
         price: number;
@@ -39,7 +39,8 @@ export const getAllRawMaterial = async (id: string) => {
 export const getAllExtraItems = async (id: string) => {
   try {
     const response = await api.get(`/admin/extraItem/${id}`);
-    return response.data;
+    console.log('res extra', response);
+    return response;
   } catch (error) {
     toast.error('Failed to get extra item');
     throw error;
@@ -78,10 +79,6 @@ export const saveProduct = async (id: string, data: ProductPayload) => {
     formData.append('name', data.payload.name);
     formData.append('description', data.payload.description);
     formData.append('categoryId', data.payload.categoryId);
-    formData.append('self', data.payload.self.toString());
-    formData.append('level1', data.payload.level1.toString());
-    formData.append('level2', data.payload.level2.toString());
-
     // Append file (if exists)
     if (data.payload.imageFile) {
       formData.append('imageFile', data.payload.imageFile);
@@ -111,10 +108,6 @@ export const updateProduct = async (id: string, data: ProductPayload) => {
     formData.append('name', data.payload.name);
     formData.append('description', data.payload.description);
     formData.append('categoryId', data.payload.categoryId);
-    formData.append('self', data.payload.self.toString());
-    formData.append('level1', data.payload.level1.toString());
-    formData.append('level2', data.payload.level2.toString());
-
     if (data.payload.imageFile) {
       formData.append('imageFile', data.payload.imageFile);
     }

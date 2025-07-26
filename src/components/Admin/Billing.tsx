@@ -12,6 +12,7 @@ import {useReactToPrint} from 'react-to-print';
 import {FaFilePdf} from 'react-icons/fa6';
 import {AiFillFilePdf} from 'react-icons/ai';
 import {IoDocumentOutline} from 'react-icons/io5';
+import {useGetProfile} from '@/lib/react-query/Admin/profile';
 
 type RawMaterialItem = {
   rawMaterialId: string;
@@ -50,6 +51,8 @@ const columns: Column<inventory>[] = [
 
 const Billing = () => {
   const {user} = useAuthContext();
+
+  console.log('userrr', user);
   const {location} = useRouterState();
 
   const {adminId, merchantId, totalBillAmt, RawMaterialArray} =
@@ -62,12 +65,8 @@ const Billing = () => {
   const {mutateAsync: submitMerchantInventory, isPending} =
     useSubmitMerchantInventory();
   const {data: merchant} = useGetMerchantById(merchantId);
+  const {data: ProfileData} = useGetProfile(user?.id!);
   console.log('merchantttt', merchant);
-
-  console.log('adminId', adminId);
-  console.log('merchantId', merchantId);
-  console.log('totalBillAmt', totalBillAmt);
-  console.log('RawMaterialArray', RawMaterialArray);
 
   const formattedData: inventory[] =
     RawMaterialArray?.map((item: RawMaterialItem) => ({
@@ -95,90 +94,116 @@ const Billing = () => {
     pageStyle: `@media print { body { -webkit-print-color-adjust: exact; } }`,
   });
 
+  const date = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
   console.log('Formateddd', formattedData);
   return (
-    <div className="space-y-6 rounded-md bg-white p-6 shadow-md">
-      <div ref={printRef}>
-        <h2 className="text-gray-800 text-center text-2xl font-semibold">
-          Bill
-        </h2>
-
-        {/* Admin + Merchant Row */}
-        <div className="flex items-start justify-between pb-2">
-          {/* Admin Name */}
-          <div className="text-gray-600 text-sm">
-            <p className="font-medium">Admin:</p>
-            <p className="font-semibold">{user?.Fullname}</p>
+    <div className="bg-gray-100 flex justify-center px-2 py-10">
+      <div className="w-full max-w-[794px] bg-white p-4 text-black sm:p-6 md:p-8">
+        <div ref={printRef}>
+          {/* Header */}
+          <div className="mb-6 flex flex-col gap-4 border-b border-stroke pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <span className="h-12 w-12 overflow-hidden rounded-full">
+              <img
+                src={ProfileData?.data?.image}
+                alt="User"
+                className="h-full w-full object-cover"
+              />
+            </span>
+            <h2 className="text-gray-800 text-center text-xl font-semibold sm:text-left sm:text-2xl">
+              Invoice
+            </h2>
+            <p className="text-gray-500 text-sm">Date: {date}</p>
           </div>
 
-          {/* Merchant Info */}
-          <div className="text-gray-600 space-y-1 text-right text-sm">
-            <p className="font-semibold">
-              <span className="font-medium">Merchant Name:</span>{' '}
-              {merchant?.data?.user?.Fullname || '-'}
-            </p>
-            <p className="font-semibold">
-              <span className="font-medium">Email:</span>{' '}
-              {merchant?.data?.user?.email || '-'}
-            </p>
-            <p className="font-semibold">
-              <span className="font-medium">Phone:</span>{' '}
-              {merchant?.data?.user?.phone || '-'}
-            </p>
-          </div>
-        </div>
+          {/* Admin & Merchant Info */}
+          <div className="mb-8 flex flex-col justify-between gap-6 text-sm md:flex-row">
+            {/* Admin */}
+            <div>
+              <p>
+                <span className="font-semibold">Admin Name:</span>{' '}
+                {user?.Fullname || '-'}
+              </p>
+              <p>
+                <span className="font-semibold">Phone:</span>{' '}
+                {user?.phone || '-'}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span>{' '}
+                {user?.email || '-'}
+              </p>
+            </div>
 
-        <div className="overflow-x-auto rounded-md">
-          <table className="min-w-full table-auto border border-stroke">
-            <thead className="border border-stroke text-left text-sm font-medium text-neutral-600">
-              <tr>
-                <th className="px-4 py-2">Raw Material Name</th>
-                <th className="px-4 py-2">Price (1 item)</th>
-                <th className="px-4 py-2"></th>
-                <th className="px-4 py-2">Quantity</th>
-                <th className="px-4 py-2">Total</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-700 text-sm">
-              {formattedData?.map((item, index) => (
-                <tr key={index} className="border border-stroke">
-                  <td className="px-4 py-2">{item.rawMaterialName}</td>
-                  <td className="px-4 py-2">₹{item.sellPrice}</td>
-                  <td className="px-4 py-2">×</td>
-                  <td className="px-4 py-2">{item.quantity}</td>
-                  <td className="px-4 py-2">
-                    ₹{item.sellPrice * item.quantity}
-                  </td>
+            {/* Merchant */}
+            <div>
+              <p className="font-semibold">Invoice To:</p>
+              <p>
+                <span className="font-semibold">Name:</span>{' '}
+                {merchant?.data?.user?.Fullname || '-'}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span>{' '}
+                {merchant?.data?.user?.email || '-'}
+              </p>
+              <p>
+                <span className="font-semibold">Phone:</span>{' '}
+                {merchant?.data?.user?.phone || '-'}
+              </p>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="mb-6 w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="bg-neutral-100 text-left">
+                  <th className="px-4 py-2">Raw Material Name</th>
+                  <th className="px-4 py-2">Price (1 item)</th>
+                  <th className="px-4 py-2"></th>
+                  <th className="px-4 py-2">Quantity</th>
+                  <th className="px-4 py-2">Total</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {formattedData?.map((item, index) => (
+                  <tr key={index} className="border-b border-stroke">
+                    <td className="px-4 py-2">{item.rawMaterialName}</td>
+                    <td className="px-4 py-2">₹{item.sellPrice}</td>
+                    <td className="px-4 py-2">×</td>
+                    <td className="px-4 py-2">{item.quantity}</td>
+                    <td className="px-4 py-2">₹{item.total}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Total Bill Amount */}
-        <div className="flex justify-end pt-4">
-          <div className="text-gray-800 text-lg font-semibold">
+          {/* Total */}
+          <div className="text-right text-base font-semibold sm:text-lg">
             Total Bill Amount: ₹{totalBillAmt}
           </div>
         </div>
-      </div>
-      {/* Heading */}
 
-      {/* Submit Button */}
-      <div className="mt-2 flex justify-end gap-4">
-        <button
-          className="rounded-md bg-emerald-600 px-4 py-2 text-white transition hover:bg-emerald-700"
-          onClick={onSubmit}
-        >
-          Submit
-        </button>
+        {/* Buttons */}
+        <div className="mt-8 flex flex-col justify-end gap-4 sm:flex-row">
+          <button
+            onClick={onSubmit}
+            className="rounded bg-emerald-600 px-4 py-2 text-white transition hover:bg-emerald-700"
+          >
+            Submit
+          </button>
 
-        <button
-          className="flex items-center rounded-md bg-emerald-600 p-2 text-sm font-semibold text-white hover:bg-emerald-700"
-          onClick={handlePrint}
-        >
-          <IoDocumentOutline className="mr-2" size={20} /> Download
-        </button>
+          <button
+            onClick={handlePrint}
+            className="flex items-center justify-center gap-2 rounded bg-emerald-600 px-4 py-2 text-white transition hover:bg-emerald-700"
+          >
+            <IoDocumentOutline size={20} />
+            Download
+          </button>
+        </div>
       </div>
     </div>
   );
