@@ -2,19 +2,27 @@
 
 import {useAuthContext} from '@/context/AuthContext';
 import {
-  useGetAllExtraItems,
-  useGetAllProductCategory,
   useGetAllRawMaterial,
-  useGetProductById,
+  useGetAllProductCategory,
+  useGetAllExtraItems,
   useSaveProduct,
   useUpdateProduct,
+  useGetProductById,
 } from '@/lib/react-query/Admin/products';
+
 import React, {useEffect, useState} from 'react';
 import toast from 'react-hot-toast';
 
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-type Size = {id: string; name: string; price: number};
+type Size = {
+  id: string;
+  name: string;
+  price: number;
+  self: number;
+  level1: number;
+  level2: number;
+};
 type QtyMap = Record<string, number>;
 
 interface Row {
@@ -42,9 +50,6 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
-  const [self, setSelf] = useState('');
-  const [level1, setLevel1] = useState('');
-  const [level2, setLevel2] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -61,17 +66,29 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
   ]);
 
   const addColumn = () => {
-    setSizes([...sizes, {id: uid(), name: '', price: 0}]);
+    setSizes([
+      ...sizes,
+      {id: uid(), name: '', price: 0, self: 0, level1: 0, level2: 0},
+    ]);
   };
 
   const deleteColumn = () => {
     setSizes((prevSizes) => prevSizes.slice(0, -1));
   };
 
-  const updateSize = (id: string, key: 'name' | 'price', value: string) =>
+  const updateSize = (
+    id: string,
+    key: keyof Size, // now supports 'name', 'price', 'self', 'level1', 'level2'
+    value: string,
+  ) =>
     setSizes(
       sizes.map((s) =>
-        s.id === id ? {...s, [key]: key === 'price' ? +value : value} : s,
+        s.id === id
+          ? {
+              ...s,
+              [key]: key === 'name' ? value : +value, // convert number fields from string
+            }
+          : s,
       ),
     );
 
@@ -105,10 +122,8 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
 
       setProductName(product.name);
       setDescription(product.description);
-      setSelf(String(product.self));
+
       setCategory(product.category?.id ?? '');
-      setLevel1(String(product.level1));
-      setLevel2(String(product.level2));
       setImageFile(product.image); // or handle preview if needed
 
       if (product.image) {
@@ -118,6 +133,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         id: size.id,
         name: size.name,
         price: size.price,
+        self: size.self,
+        level1: size.level1,
+        level2: size.level2,
       }));
       setSizes(fetchedSizes);
 
@@ -160,9 +178,6 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
     setProductName('');
     setDescription('');
     setCategory('');
-    setSelf('');
-    setLevel1('');
-    setLevel2('');
     setSizes([]);
     setRawRows([]);
     setExtraRows([]);
@@ -176,9 +191,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       name: productName,
       description,
       categoryId: category,
-      self: Number(self),
-      level1: Number(level1),
-      level2: Number(level2),
+      // self: Number(self),
+      // level1: Number(level1),
+      // level2: Number(level2),
       imageFile: imageFile ?? undefined,
       size: sizes.map((size) => {
         // raw materials for this size
@@ -200,6 +215,9 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
         return {
           name: size.name,
           price: size.price,
+          self: size.self,
+          level1: size.level1,
+          level2: size.level2,
           rawMaterials,
           extraItems,
         };
@@ -253,7 +271,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
                 ))}
 
               {label === 'Select Extra Item' &&
-                allExtraItems?.map((item: any) => (
+                allExtraItems?.data?.map((item: any) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
@@ -304,21 +322,62 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
       <tr>
         <th />
         {sizes.map((s) => (
-          <th key={s.id} className="px-3 pb-4">
-            <div className="flex flex-col items-center gap-2">
-              <input
-                className="rounded border border-stroke py-3 text-center dark:border-form-strokedark dark:bg-boxdark"
-                placeholder="name"
-                value={s.name}
-                onChange={(e) => updateSize(s.id, 'name', e.target.value)}
-              />
-              <input
-                type="number"
-                className="rounded border border-stroke py-3 text-center dark:border-form-strokedark dark:bg-boxdark"
-                placeholder="price"
-                value={s.price}
-                onChange={(e) => updateSize(s.id, 'price', e.target.value)}
-              />
+          <th key={s.id} className="px-2 pb-4 align-top">
+            {/* First input group */}
+            <div className="flex w-[180px] flex-col items-center gap-2">
+              <div className="w-full text-left">
+                {/* <label className="text-xs text-gray-700 dark:text-gray-300">Name</label> */}
+                <input
+                  className="w-full rounded border border-stroke px-1 py-2 text-center dark:border-form-strokedark dark:bg-boxdark"
+                  placeholder="name"
+                  value={s.name}
+                  onChange={(e) => updateSize(s.id, 'name', e.target.value)}
+                />
+              </div>
+              <div className="w-full text-center">
+                <label className="text-gray-700 dark:text-gray-300 text-center text-xs">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  className="w-full rounded border border-stroke px-1 py-2 text-center dark:border-form-strokedark dark:bg-boxdark"
+                  placeholder="price"
+                  value={s.price}
+                  onChange={(e) => updateSize(s.id, 'price', e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Second input group - 3 horizontal inputs */}
+            <div className="mt-2 w-[180px]">
+              <div className="text-gray-700 dark:text-gray-300 mb-1 flex justify-between text-xs">
+                <span className="w-1/3 text-center">Self</span>
+                <span className="w-1/3 text-center">Level 1</span>
+                <span className="w-1/3 text-center">Level 2</span>
+              </div>
+              <div className="flex w-full flex-row items-center justify-between gap-1">
+                <input
+                  type="number"
+                  className="w-1/3 rounded border border-stroke py-2 text-center dark:border-form-strokedark dark:bg-boxdark"
+                  placeholder="self"
+                  value={s.self}
+                  onChange={(e) => updateSize(s.id, 'self', e.target.value)}
+                />
+                <input
+                  type="number"
+                  className="w-1/3 rounded border border-stroke py-2 text-center dark:border-form-strokedark dark:bg-boxdark"
+                  placeholder="level1"
+                  value={s.level1}
+                  onChange={(e) => updateSize(s.id, 'level1', e.target.value)}
+                />
+                <input
+                  type="number"
+                  className="w-1/3 rounded border border-stroke py-2 text-center dark:border-form-strokedark dark:bg-boxdark"
+                  placeholder="level2"
+                  value={s.level2}
+                  onChange={(e) => updateSize(s.id, 'level2', e.target.value)}
+                />
+              </div>
             </div>
           </th>
         ))}
@@ -404,7 +463,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             ))}
           </select>
         </div>
-
+        {/* 
         <div className="col-span-4">
           <label className="text-sm font-medium">Self</label>
           <input
@@ -433,7 +492,7 @@ const ProductPage: React.FC<Props> = ({mode, id}) => {
             value={level2}
             onChange={(e) => setLevel2(e.target.value)}
           />
-        </div>
+        </div> */}
 
         <div className="col-span-6">
           <label className="text-gray-700 mb-1 block text-sm font-medium">

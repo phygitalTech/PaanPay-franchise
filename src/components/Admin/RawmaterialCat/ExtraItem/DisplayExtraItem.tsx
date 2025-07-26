@@ -59,7 +59,7 @@ const DisplayExtraItem: React.FC = () => {
   return (
     <div className="mt-4">
       <GenericTable
-        data={extraItemsData || []}
+        data={extraItemsData?.data || []}
         columns={columns}
         itemsPerPage={5}
         action={true}

@@ -146,20 +146,20 @@ export const fetchExtraItems = async (id: string) => {
   }
 };
 
-export const fetchExtraItemsData = async (id: string) => {
-  try {
-    const response = await api.get(`/admin/extraItem/${id}`);
-    //console.log('Fetched extra itemsssssss:', response.data);
-    return response.data;
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch extra items',
-      );
-    }
-    throw error;
-  }
-};
+// export const fetchExtraItemsData = async (id: string) => {
+//   try {
+//     const response = await api.get(`/admin/extraItem/${id}`);
+//     //console.log('Fetched extra itemsssssss:', response.data);
+//     return response
+//   } catch (error) {
+//     if (error instanceof AxiosError) {
+//       throw new Error(
+//         error.response?.data?.message || 'Failed to fetch extra items',
+//       );
+//     }
+//     throw error;
+//   }
+// };
 export const deleteExtraItem = async (id: string) => {
   try {
     const response = await api.delete(`/admin/extraItem/${id}`);
